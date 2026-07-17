@@ -332,8 +332,10 @@ class NutriApp {
           </div>
         `;
       }).join('') || '<p class="text-sm text-gray-400 text-center py-2">Sin alimentos</p>';
-      document.getElementById(c.itemsEl).innerHTML = html;
-      document.getElementById(c.kcalEl).textContent = `${totalKcal} kcal`;
+      const itemsEl = document.getElementById(c.itemsEl);
+      const kcalEl = document.getElementById(c.kcalEl);
+      if (itemsEl) itemsEl.innerHTML = html;
+      if (kcalEl) kcalEl.textContent = `${totalKcal} kcal`;
     });
 
     document.querySelectorAll('[data-delete]').forEach(btn => {
@@ -732,6 +734,7 @@ class NutriApp {
   }
 
   renderPeso() {
+    if (!document.getElementById('pesoActual')) return; // UI de peso no presente
     const fechas = Object.keys(this.pesos).sort();
     if (fechas.length === 0) {
       document.getElementById('pesoActual').textContent = '—';
@@ -748,7 +751,13 @@ class NutriApp {
     const ultimo = this.pesos[fechas[fechas.length - 1]];
     document.getElementById('pesoActual').textContent = `${ultimo} kg`;
 
-    const imc = (ultimo / (1.7 * 1.7)).toFixed(1);
+    // IMC con la estatura real de la evaluación (fallback 1.70m)
+    let alturaM = 1.7;
+    try {
+      const salud = JSON.parse(localStorage.getItem('nutrimx_salud') || 'null');
+      if (salud && salud.estatura) alturaM = salud.estatura / 100;
+    } catch (e) {}
+    const imc = (ultimo / (alturaM * alturaM)).toFixed(1);
     document.getElementById('imcActual').textContent = imc;
 
     const recientes = fechas.slice(-7).map(f => this.pesos[f]);

@@ -324,8 +324,14 @@ class NubeNutriMX {
         id: 'ia-' + Date.now() + Math.random().toString(36).slice(2, 6),
         nombre: '📷 ' + a.nombre,
         gramos: a.gramos,
-        kcal: a.kcal,
-        p: a.proteina, ch: a.carbs, g: a.grasa, f: a.fibra || 0
+        macros: {
+          kcal: a.kcal,
+          proteina: a.proteina,
+          carb: a.carbs,
+          grasa: a.grasa,
+          fibra: a.fibra || 0
+        },
+        timestamp: Date.now()
       });
     });
     app.guardarTodo && app.guardarTodo();

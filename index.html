@@ -264,6 +264,48 @@
     .perfil-aviso { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; border-radius:12px; padding:12px 14px; font-size:.82rem; margin-top:14px; }
     .perfil-disclaimer { font-size:.7rem; color:#9ca3af; margin-top:14px; }
 
+    /* ===== Portada animada ===== */
+    .splash { position:fixed; inset:0; z-index:200; overflow:hidden; display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(160deg,#022c22 0%,#065f46 45%,#059669 100%); transition:opacity .7s ease, visibility .7s; }
+    .splash.oculta { opacity:0; visibility:hidden; pointer-events:none; }
+    .splash-bg { position:absolute; inset:0; }
+    .splash-emoji { position:absolute; left:var(--x); bottom:-80px; font-size:var(--s); opacity:0;
+      animation:splashFlota var(--d) linear infinite; animation-delay:var(--delay);
+      filter:drop-shadow(0 4px 10px rgba(0,0,0,.35)); }
+    @keyframes splashFlota {
+      0%   { transform:translateY(0) rotate(-8deg); opacity:0; }
+      8%   { opacity:.9; }
+      50%  { transform:translateY(-55vh) rotate(8deg); opacity:.85; }
+      92%  { opacity:0; }
+      100% { transform:translateY(-110vh) rotate(-6deg); opacity:0; }
+    }
+    .splash-centro { position:relative; text-align:center; color:#fff; padding:0 24px; animation:splashEntra 1s ease both .2s; }
+    @keyframes splashEntra { from { transform:translateY(24px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    .splash-logo { font-size:4.5rem; animation:splashLate 2.4s ease-in-out infinite; display:inline-block; }
+    @keyframes splashLate { 0%,100% { transform:scale(1); } 50% { transform:scale(1.12) rotate(4deg); } }
+    .splash-titulo { font-size:3rem; font-weight:800; letter-spacing:-1px; margin:4px 0 6px;
+      background:linear-gradient(90deg,#fff,#a7f3d0,#fff); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent;
+      animation:splashBrillo 3.5s linear infinite; }
+    @keyframes splashBrillo { to { background-position:200% center; } }
+    .splash-sub { font-size:1.15rem; opacity:.95; margin-bottom:6px; }
+    .splash-mini { font-size:.85rem; opacity:.7; max-width:420px; margin:0 auto 26px; }
+    .splash-btn { background:#fff; color:#065f46; font-weight:800; font-size:1.05rem; border:none; border-radius:9999px;
+      padding:14px 44px; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,.35); transition:.2s; animation:splashPulsa 2s ease-in-out infinite; }
+    .splash-btn:hover { transform:scale(1.06); background:#ecfdf5; }
+    @keyframes splashPulsa { 0%,100% { box-shadow:0 10px 30px rgba(0,0,0,.35); } 50% { box-shadow:0 10px 42px rgba(167,243,208,.55); } }
+    .splash-ola { position:absolute; bottom:0; left:0; right:0; height:80px;
+      background:radial-gradient(60% 100% at 50% 100%, rgba(255,255,255,.12), transparent); }
+    @media (prefers-reduced-motion: reduce) { .splash-emoji, .splash-logo, .splash-btn, .splash-titulo { animation:none; } }
+
+    /* ===== Registro del día / Peso ===== */
+    .registro-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+    .registro-head { display:flex; justify-content:space-between; font-weight:700; margin-bottom:10px; }
+    .registro-kcal { color:#059669; font-size:.9rem; }
+    .registro-items { min-height:30px; margin-bottom:10px; }
+    .peso-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+    .peso-form { display:flex; gap:8px; flex-wrap:wrap; }
+    .peso-form .input { max-width:180px; }
+
     /* ===== Evaluación de salud ===== */
     .salud-caja { max-width:520px; max-height:88vh; overflow-y:auto; }
     .salud-sub { font-size:.83rem; color:#6b7280; margin-bottom:12px; }
@@ -298,6 +340,32 @@
   </style>
 </head>
 <body>
+  <!-- 🎬 Portada animada -->
+  <div id="splash" class="splash">
+    <div class="splash-bg">
+      <span class="splash-emoji" style="--x:8%;  --d:11s; --s:2.2rem; --delay:0s">🥑</span>
+      <span class="splash-emoji" style="--x:20%; --d:14s; --s:3rem;   --delay:1.2s">🏋️</span>
+      <span class="splash-emoji" style="--x:32%; --d:12s; --s:2.4rem; --delay:2.5s">🍎</span>
+      <span class="splash-emoji" style="--x:44%; --d:15s; --s:2.8rem; --delay:.6s">🏃</span>
+      <span class="splash-emoji" style="--x:56%; --d:13s; --s:2.3rem; --delay:3.1s">🥦</span>
+      <span class="splash-emoji" style="--x:68%; --d:16s; --s:3rem;   --delay:1.8s">💪</span>
+      <span class="splash-emoji" style="--x:80%; --d:12s; --s:2.5rem; --delay:.3s">🌮</span>
+      <span class="splash-emoji" style="--x:90%; --d:14s; --s:2.6rem; --delay:2.2s">🧘</span>
+      <span class="splash-emoji" style="--x:14%; --d:17s; --s:2.2rem; --delay:4s">🚴</span>
+      <span class="splash-emoji" style="--x:62%; --d:18s; --s:2.4rem; --delay:5s">🍊</span>
+      <span class="splash-emoji" style="--x:38%; --d:16s; --s:2.1rem; --delay:6s">🏊</span>
+      <span class="splash-emoji" style="--x:74%; --d:15s; --s:2.2rem; --delay:4.5s">🥕</span>
+    </div>
+    <div class="splash-centro">
+      <div class="splash-logo">🧬</div>
+      <h1 class="splash-titulo">NutriMX</h1>
+      <p class="splash-sub">Come mejor. Muévete más. <strong>Vive más fuerte.</strong></p>
+      <p class="splash-mini">Nutrición y ejercicio con evidencia científica — para hombres, mujeres, niños y adultos mayores 🇲🇽</p>
+      <button id="splashEntrar" class="splash-btn">Comenzar 💪</button>
+    </div>
+    <div class="splash-ola"></div>
+  </div>
+
   <!-- Header -->
   <header class="app-header">
     <div class="px-4 py-3 flex items-center justify-between">
@@ -456,6 +524,33 @@
       <div id="emptySearch" class="empty-state hidden">
         <div class="empty-icon">🔍</div>
         <p>Escribe para buscar entre 100+ alimentos con evidencia científica</p>
+      </div>
+
+      <!-- 📒 Registro del día -->
+      <div class="mt-6">
+        <h3 class="font-bold mb-3">📒 Mi registro de hoy</h3>
+        <div class="registro-grid">
+          <div class="card p-4">
+            <div class="registro-head"><span>🌅 Desayuno</span><span id="desayunoKcal" class="registro-kcal">0 kcal</span></div>
+            <div id="desayunoItems" class="registro-items"></div>
+            <button class="btn btn-secondary w-full text-sm" data-add="desayuno">➕ Agregar alimento</button>
+          </div>
+          <div class="card p-4">
+            <div class="registro-head"><span>☀️ Comida</span><span id="comidaKcal" class="registro-kcal">0 kcal</span></div>
+            <div id="comidaItems" class="registro-items"></div>
+            <button class="btn btn-secondary w-full text-sm" data-add="comida">➕ Agregar alimento</button>
+          </div>
+          <div class="card p-4">
+            <div class="registro-head"><span>🌙 Cena</span><span id="cenaKcal" class="registro-kcal">0 kcal</span></div>
+            <div id="cenaItems" class="registro-items"></div>
+            <button class="btn btn-secondary w-full text-sm" data-add="cena">➕ Agregar alimento</button>
+          </div>
+          <div class="card p-4">
+            <div class="registro-head"><span>🍎 Colación</span><span id="colacionKcal" class="registro-kcal">0 kcal</span></div>
+            <div id="colacionItems" class="registro-items"></div>
+            <button class="btn btn-secondary w-full text-sm" data-add="colacion">➕ Agregar alimento</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1581,6 +1676,24 @@
         <p class="text-sm text-gray-500">Lo que se mide se gestiona. Métricas correctas, frecuencia adecuada.</p>
       </div>
 
+      <!-- ⚖️ Registro de peso -->
+      <div class="card p-4 mb-4">
+        <h3 class="font-bold mb-3">⚖️ Mi peso corporal</h3>
+        <div class="peso-stats">
+          <div class="salud-stat"><b id="pesoActual">—</b><span>Peso actual</span></div>
+          <div class="salud-stat"><b id="imcActual">—</b><span>IMC</span></div>
+          <div class="salud-stat"><b id="tendenciaPeso" class="weight-trend">—</b><span>Tendencia 7 días</span></div>
+        </div>
+        <div class="peso-form">
+          <input type="date" id="pesoFecha" class="input">
+          <input type="number" id="pesoValor" class="input" placeholder="Peso en kg" min="30" max="200" step="0.1">
+          <button class="btn btn-primary" id="btnGuardarPeso">Guardar</button>
+        </div>
+        <p class="text-xs text-gray-400 mt-2">Pésate 1 vez por semana, misma hora, en ayunas. La tendencia importa más que el número del día.</p>
+        <div id="emptyPeso" class="empty-state hidden"><div class="empty-icon">⚖️</div><p>Registra tu primer peso para ver tu tendencia</p></div>
+        <div id="pesoHistorial" class="mt-3"></div>
+      </div>
+
       <div class="space-y-4">
         <!-- Métricas Clave -->
         <div class="card p-4">
@@ -1793,6 +1906,15 @@
   <script src="./salud.js"></script>
   <script src="./app.js"></script>
   <script>
+    // Portada: botón en primera visita; auto-cierre breve en visitas siguientes
+    (function () {
+      const splash = document.getElementById('splash');
+      const btn = document.getElementById('splashEntrar');
+      const cerrar = () => { splash.classList.add('oculta'); };
+      btn.addEventListener('click', () => { localStorage.setItem('nutrimx_splash_visto', '1'); cerrar(); });
+      if (localStorage.getItem('nutrimx_splash_visto')) setTimeout(cerrar, 1800);
+    })();
+
     // Videoteca: reproducir al tocar (lazy embed, sin cookies)
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.video-card').forEach(card => {
