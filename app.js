@@ -141,6 +141,11 @@ class NutriApp {
     localStorage.setItem('nutrimx_objetivos', JSON.stringify(this.objetivos));
     localStorage.setItem('nutrimx_checklists', JSON.stringify(this.checklists));
     localStorage.setItem('nutrimx_programa', this.programaActual);
+    // Sincronizar a la nube (si hay sesión), con debounce
+    if (window.nube && window.nube.activa) {
+      clearTimeout(this._syncTimer);
+      this._syncTimer = setTimeout(() => window.nube.subirDatos(), 1500);
+    }
   }
 
   // ==================== UTILIDADES ====================
@@ -1119,4 +1124,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Inicializar app
   window.nutriApp = new NutriApp();
   await window.nutriApp.init();
+
+  // Inicializar nube (auth + sync + fotos IA) — opcional, no bloquea lo local
+  if (window.nube) {
+    try {
+      window.nube.setupEventListeners();
+      await window.nube.init();
+    } catch (e) { console.warn('Nube no disponible:', e); }
+  }
 });

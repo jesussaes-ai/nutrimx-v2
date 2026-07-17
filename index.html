@@ -196,6 +196,53 @@
     .protocol-card h4 { margin: 0 0 0.5rem; font-size: 1.125rem; }
     .protocol-card p { margin: 0; opacity: 0.9; font-size: 0.875rem; }
     .reference { font-size: 0.7rem; color: var(--muted); font-style: italic; margin-top: 0.5rem; display: block; }
+
+    /* ===== Autenticación ===== */
+    .auth-chip { display:inline-flex; align-items:center; gap:8px; }
+    .auth-nombre { font-size:.8rem; opacity:.9; }
+    .auth-btn { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.35); color:#fff; font-size:.75rem; padding:4px 10px; border-radius:9999px; cursor:pointer; }
+    .auth-btn:hover { background:rgba(255,255,255,.28); }
+    .auth-btn-primario { background:#fff; color:#047857; font-weight:600; border:none; }
+    .auth-btn-primario:hover { background:#ecfdf5; }
+    .auth-modal { position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:100; padding:16px; }
+    .auth-caja { background:#fff; border-radius:16px; padding:24px; width:100%; max-width:380px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+    .auth-cerrar { position:absolute; top:10px; right:12px; background:none; border:none; font-size:1.1rem; cursor:pointer; color:#6b7280; }
+    .auth-titulo { font-size:1.2rem; font-weight:700; margin-bottom:14px; color:#065f46; }
+    .auth-label { display:block; font-size:.8rem; font-weight:600; color:#374151; margin:10px 0 4px; }
+    .auth-error { color:#dc2626; font-size:.8rem; margin-top:8px; }
+    .auth-submit { width:100%; margin-top:16px; }
+    .auth-alt { font-size:.8rem; text-align:center; margin-top:12px; }
+    .auth-alt a { color:#047857; font-weight:600; }
+    .auth-nota { font-size:.7rem; color:#9ca3af; margin-top:12px; text-align:center; }
+
+    /* ===== Foto IA ===== */
+    .foto-card { border:2px dashed #a7f3d0; background:linear-gradient(135deg,#f0fdf4,#ecfeff); }
+    .foto-controles { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .foto-btn-elegir { cursor:pointer; }
+    .foto-preview { max-width:260px; max-height:200px; border-radius:12px; margin-top:12px; object-fit:cover; box-shadow:0 4px 14px rgba(0,0,0,.15); }
+    .foto-aviso { font-size:.8rem; color:#b45309; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px 12px; margin-bottom:10px; }
+    .foto-info { font-size:.85rem; color:#0369a1; margin-top:10px; }
+    .foto-error { font-size:.85rem; color:#dc2626; margin-top:10px; }
+    .foto-analisis { margin-top:14px; background:#fff; border-radius:12px; padding:14px; border:1px solid #d1fae5; }
+    .foto-comentario { font-size:.85rem; color:#374151; margin-bottom:10px; }
+    .foto-item { display:flex; align-items:center; gap:10px; padding:7px 4px; border-bottom:1px solid #f3f4f6; cursor:pointer; flex-wrap:wrap; }
+    .foto-item-nombre { font-weight:600; font-size:.9rem; }
+    .foto-item-kcal { font-size:.75rem; color:#6b7280; margin-left:auto; }
+    .foto-total { margin-top:10px; font-size:.95rem; }
+    .foto-acciones { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    .foto-acciones select { max-width:180px; }
+    .foto-nota { font-size:.7rem; color:#9ca3af; margin-top:10px; }
+
+    /* ===== Videoteca ===== */
+    .video-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+    .video-card { position:relative; border-radius:12px; overflow:hidden; cursor:pointer; aspect-ratio:16/10; background:#111; }
+    .video-card img { width:100%; height:100%; object-fit:cover; opacity:.85; transition:.2s; }
+    .video-card:hover img { opacity:1; transform:scale(1.04); }
+    .video-play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(220,38,38,.92); color:#fff; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.9rem; pointer-events:none; }
+    .video-titulo { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.85)); color:#fff; font-size:.75rem; font-weight:600; padding:14px 8px 6px; pointer-events:none; }
+    .video-player { margin-top:14px; background:#000; border-radius:12px; overflow:hidden; }
+    .video-player-head { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; color:#fff; background:#111827; }
+    .video-player iframe { width:100%; aspect-ratio:16/9; border:0; display:block; }
   </style>
 </head>
 <body>
@@ -208,6 +255,7 @@
       </div>
       <div class="flex items-center gap-2">
         <span id="todayDate" class="text-sm opacity-80 hidden sm:block"></span>
+        <span id="authChip" class="auth-chip"></span>
         <button id="installBtn" class="btn btn-secondary px-3 py-1.5 text-xs hidden" aria-label="Instalar app">Instalar</button>
       </div>
     </div>
@@ -313,6 +361,21 @@
 
     <!-- TAB: NUTRICIÓN -->
     <section id="tab-nutricion" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-nutricion">
+      <!-- 📷 Análisis de comida con IA -->
+      <div class="card p-4 mb-4 foto-card">
+        <h3 class="font-bold mb-1">📷 Registra tu comida con una foto</h3>
+        <p class="text-sm text-gray-500 mb-3">Toma una foto de tu platillo y la IA identifica los alimentos y estima las calorías.</p>
+        <p id="fotoAvisoSesion" class="foto-aviso hidden">🔒 Inicia sesión (arriba a la derecha) para usar el análisis con IA.</p>
+        <div class="foto-controles">
+          <label class="btn btn-secondary foto-btn-elegir">
+            📸 Tomar / elegir foto
+            <input type="file" id="fotoInput" accept="image/*" capture="environment" class="hidden">
+          </label>
+          <button id="btnAnalizarFoto" class="btn btn-primary hidden">🤖 Analizar con IA</button>
+        </div>
+        <img id="fotoPreview" class="foto-preview hidden" alt="Foto de tu comida">
+        <div id="fotoResultado"></div>
+      </div>
       <div class="mb-4">
         <label class="sr-only" for="searchInput">Buscar alimentos</label>
         <div class="relative">
@@ -348,6 +411,39 @@
       <div class="mb-4">
         <h2 class="text-lg font-bold mb-2">Protocolos de Ejercicio Basados en Evidencia (ACSM/NSCA)</h2>
         <p class="text-sm text-gray-500">Selecciona tu nivel. La fuerza es la base metabólica; cardio y NEAT son herramientas de gasto extra.</p>
+      </div>
+
+      <!-- 🎬 Videoteca de técnica -->
+      <div class="card p-4 mb-4">
+        <h3 class="font-bold mb-1">🎬 Videoteca de técnica</h3>
+        <p class="text-sm text-gray-500 mb-3">Toca un ejercicio para ver el video de técnica correcta (en español).</p>
+        <div class="video-grid">
+          <div class="video-card" data-video="qsAkuNORgmk" data-titulo="Sentadilla">
+            <img src="https://i.ytimg.com/vi/qsAkuNORgmk/hqdefault.jpg" alt="Técnica de sentadilla" loading="lazy">
+            <span class="video-play">▶</span><span class="video-titulo">🦵 Sentadilla</span>
+          </div>
+          <div class="video-card" data-video="3k1WyyqWk-s" data-titulo="Press de banca">
+            <img src="https://i.ytimg.com/vi/3k1WyyqWk-s/hqdefault.jpg" alt="Técnica de press de banca" loading="lazy">
+            <span class="video-play">▶</span><span class="video-titulo">🏋️ Press de banca</span>
+          </div>
+          <div class="video-card" data-video="7KL8SgCP4KQ" data-titulo="Peso muerto">
+            <img src="https://i.ytimg.com/vi/7KL8SgCP4KQ/hqdefault.jpg" alt="Técnica de peso muerto" loading="lazy">
+            <span class="video-play">▶</span><span class="video-titulo">💀 Peso muerto</span>
+          </div>
+          <div class="video-card" data-video="OHxSwnkSxB8" data-titulo="Press militar">
+            <img src="https://i.ytimg.com/vi/OHxSwnkSxB8/hqdefault.jpg" alt="Técnica de press militar" loading="lazy">
+            <span class="video-play">▶</span><span class="video-titulo">💪 Press militar</span>
+          </div>
+          <div class="video-card" data-video="nQSi7XLixYU" data-titulo="Remo con barra">
+            <img src="https://i.ytimg.com/vi/nQSi7XLixYU/hqdefault.jpg" alt="Técnica de remo con barra" loading="lazy">
+            <span class="video-play">▶</span><span class="video-titulo">🚣 Remo con barra</span>
+          </div>
+          <div class="video-card" data-video="TjT5CAYvaTE" data-titulo="Dominadas">
+            <img src="https://i.ytimg.com/vi/TjT5CAYvaTE/hqdefault.jpg" alt="Técnica de dominadas" loading="lazy">
+            <span class="video-play">▶</span><span class="video-titulo">🧗 Dominadas</span>
+          </div>
+        </div>
+        <div id="videoPlayer" class="video-player hidden"></div>
       </div>
       
       <div class="space-y-4">
@@ -1601,7 +1697,45 @@
     </div>
   </div>
 
+  <!-- 🔐 Modal de autenticación -->
+  <div id="authModal" class="auth-modal hidden" role="dialog" aria-modal="true">
+    <div class="auth-caja">
+      <button id="authCerrar" class="auth-cerrar" aria-label="Cerrar">✕</button>
+      <h3 id="authTitulo" class="auth-titulo">Iniciar sesión</h3>
+      <div id="authNombreWrap" class="hidden">
+        <label class="auth-label" for="authNombre">Tu nombre</label>
+        <input type="text" id="authNombre" class="input" placeholder="Ej. Jesús" autocomplete="name">
+      </div>
+      <label class="auth-label" for="authEmail">Email</label>
+      <input type="email" id="authEmail" class="input" placeholder="tu@email.com" autocomplete="email">
+      <label class="auth-label" for="authPass">Contraseña</label>
+      <input type="password" id="authPass" class="input" placeholder="Mínimo 8 caracteres" autocomplete="current-password">
+      <p id="authError" class="auth-error hidden"></p>
+      <button id="authSubmit" class="btn btn-primary auth-submit">Entrar</button>
+      <p id="authAlt" class="auth-alt"></p>
+      <p class="auth-nota">Tus datos se guardan de forma segura y solo tú puedes verlos. Con cuenta, tu progreso te sigue en cualquier dispositivo.</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="./ciencia.js"></script>
+  <script src="./nube.js"></script>
   <script src="./app.js"></script>
+  <script>
+    // Videoteca: reproducir al tocar (lazy embed, sin cookies)
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.video-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = card.dataset.video;
+          const player = document.getElementById('videoPlayer');
+          player.classList.remove('hidden');
+          player.innerHTML = '<div class="video-player-head"><strong>' + card.dataset.titulo +
+            '</strong><button class="auth-btn" onclick="this.closest(\'.video-player\').classList.add(\'hidden\');this.closest(\'.video-player\').querySelector(\'iframe\')?.remove()">✕ Cerrar</button></div>' +
+            '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" title="Video de técnica" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+          player.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      });
+    });
+  </script>
 </body>
 </html>

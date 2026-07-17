@@ -1,10 +1,11 @@
 // Service Worker para NutriMX v2.0 - Offline-first PWA
-const CACHE_NAME = 'nutrimx-v2.1';
+const CACHE_NAME = 'nutrimx-v2.2';
 const STATIC_ASSETS = [
   './',
   './index.html',
   './app.js',
   './ciencia.js',
+  './nube.js',
   './manifest.json',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap'
@@ -39,6 +40,25 @@ self.addEventListener('fetch', (event) => {
 
   // Solo manejar GET
   if (request.method !== 'GET') return;
+
+  // Nunca interceptar la API de Supabase (datos siempre frescos)
+  if (url.hostname.endsWith('.supabase.co')) return;
+
+  // JS/CSS propios: network-first para recibir actualizaciones al instante
+  if (url.origin === self.location.origin && /\.(js|css)$/.test(url.pathname)) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
 
   // HTML - network first, fallback to cache
   if (request.headers.get('accept')?.includes('text/html')) {
