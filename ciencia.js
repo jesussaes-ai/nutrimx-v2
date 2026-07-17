@@ -367,6 +367,11 @@ const CIENCIA = {
   }
 };
 
+// Exponer globalmente para app.js
+if (typeof window !== 'undefined') {
+  window.CIENCIA = CIENCIA;
+}
+
 // Exportar para uso en módulos
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = CIENCIA;
