@@ -264,6 +264,27 @@
     .perfil-aviso { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; border-radius:12px; padding:12px 14px; font-size:.82rem; margin-top:14px; }
     .perfil-disclaimer { font-size:.7rem; color:#9ca3af; margin-top:14px; }
 
+    /* ===== Evaluación de salud ===== */
+    .salud-caja { max-width:520px; max-height:88vh; overflow-y:auto; }
+    .salud-sub { font-size:.83rem; color:#6b7280; margin-bottom:12px; }
+    .salud-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .salud-grid .auth-label { margin-top:0; }
+    .salud-checks { display:flex; flex-direction:column; gap:2px; margin-bottom:12px; }
+    .salud-check { display:flex; align-items:flex-start; gap:10px; font-size:.85rem; padding:7px 6px; border-radius:8px; cursor:pointer; }
+    .salud-check:hover { background:#f9fafb; }
+    .salud-check input { margin-top:3px; flex-shrink:0; }
+    .salud-consent { background:#f0fdf4; border:1px solid #a7f3d0; margin-bottom:8px; padding:10px; }
+    .salud-consent a { color:#047857; font-weight:600; }
+    .salud-nav { display:flex; justify-content:space-between; gap:10px; margin-top:16px; }
+    .salud-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:8px; margin-bottom:12px; }
+    .salud-stat { background:#f0fdf4; border-radius:12px; padding:10px; text-align:center; }
+    .salud-stat b { display:block; font-size:1.2rem; color:#065f46; }
+    .salud-stat span { font-size:.68rem; color:#6b7280; }
+    .salud-linea { font-size:.88rem; margin-bottom:6px; }
+    .salud-rec { font-size:.82rem; background:#f0fdf4; border-radius:8px; padding:8px 12px; margin-bottom:6px; }
+    .salud-prec { font-size:.82rem; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px 12px; margin-bottom:6px; }
+    .salud-cta { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; border:2px solid #a7f3d0; }
+
     /* ===== Videoteca ===== */
     .video-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
     .video-card { position:relative; border-radius:12px; overflow:hidden; cursor:pointer; aspect-ratio:16/10; background:#111; }
@@ -445,6 +466,7 @@
         <h2 class="text-lg font-bold mb-2">👨‍👩‍👧 Ejercicio, alimentación y suplementos para ti</h2>
         <p class="text-sm text-gray-500">Cada cuerpo es distinto. Elige tu perfil y recibe recomendaciones adaptadas con rutinas y videos.</p>
       </div>
+      <div id="saludResumen"></div>
       <div class="perfil-selector">
         <button class="perfil-btn activo" data-perfil="hombre">👨<span>Hombre</span></button>
         <button class="perfil-btn" data-perfil="mujer">👩<span>Mujer</span></button>
@@ -1760,7 +1782,7 @@
       <p id="authError" class="auth-error hidden"></p>
       <button id="authSubmit" class="btn btn-primary auth-submit">Entrar</button>
       <p id="authAlt" class="auth-alt"></p>
-      <p class="auth-nota">Tus datos se guardan de forma segura y solo tú puedes verlos. Con cuenta, tu progreso te sigue en cualquier dispositivo.</p>
+      <p class="auth-nota">Tus datos se guardan de forma segura y solo tú puedes verlos. Con cuenta, tu progreso te sigue en cualquier dispositivo. Consulta nuestro <a href="./aviso-privacidad.html" target="_blank" rel="noopener">Aviso de Privacidad</a>.</p>
     </div>
   </div>
 
@@ -1768,6 +1790,7 @@
   <script src="./ciencia.js"></script>
   <script src="./nube.js"></script>
   <script src="./perfiles.js"></script>
+  <script src="./salud.js"></script>
   <script src="./app.js"></script>
   <script>
     // Videoteca: reproducir al tocar (lazy embed, sin cookies)

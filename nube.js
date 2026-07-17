@@ -57,6 +57,8 @@ class NubeNutriMX {
     this.user = data.user;
     await this.descargarDatos();
     await this.subirDatos();
+    // Evaluación inicial de salud: pedirla si aún no existe
+    if (window.salud) setTimeout(() => window.salud.verificar(), 600);
     return data;
   }
 
@@ -102,8 +104,14 @@ class NubeNutriMX {
       (dias || []).forEach(d => { app.registros[d.fecha] = d.data; });
       const { data: pesos } = await this.sb.from('pesos').select('fecha,peso');
       (pesos || []).forEach(p => { app.pesos[p.fecha] = parseFloat(p.peso); });
-      const { data: prof } = await this.sb.from('profiles').select('objetivos').eq('id', this.user.id).maybeSingle();
+      const { data: prof } = await this.sb.from('profiles').select('objetivos,datos').eq('id', this.user.id).maybeSingle();
       if (prof && prof.objetivos) app.objetivos = { ...app.objetivos, ...prof.objetivos };
+      // Restaurar evaluación de salud desde la nube si no existe local
+      if (prof && prof.datos && window.salud && !window.salud.datos) {
+        window.salud.datos = prof.datos;
+        window.salud.guardarLocal();
+        window.salud.renderResumen();
+      }
       app.guardarTodo && app.guardarTodo();
       app.renderTodo && app.renderTodo();
     } catch (e) { console.warn('Nube: error descargando datos', e); }
