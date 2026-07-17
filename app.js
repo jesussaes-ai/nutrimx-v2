@@ -36,13 +36,14 @@ class NutriApp {
 
   async init() {
     // Cargar ciencia.js primero
+    const safe = (fn, nombre) => { try { fn(); } catch (e) { console.error('Error en ' + nombre + ':', e); } };
     await this.cargarCiencia();
-    await this.cargarDatos();
-    this.renderFechaActual();
-    this.setupEventListeners();
-    this.setupPWA();
-    this.renderTodo();
-    this.verificarInstalacion();
+    try { await this.cargarDatos(); } catch (e) { console.error('Error en cargarDatos:', e); }
+    safe(() => this.setupEventListeners(), 'setupEventListeners');
+    safe(() => this.renderFechaActual(), 'renderFechaActual');
+    safe(() => this.setupPWA(), 'setupPWA');
+    safe(() => this.renderTodo(), 'renderTodo');
+    safe(() => this.verificarInstalacion(), 'verificarInstalacion');
   }
 
   async cargarCiencia() {
@@ -209,11 +210,13 @@ class NutriApp {
   renderFechaActual() {
     const hoy = new Date();
     const opciones = { weekday: 'long', day: 'numeric', month: 'long' };
-    document.getElementById('todayDate').textContent = hoy.toLocaleDateString('es-MX', opciones);
-    document.getElementById('dashboardFecha').value = this.fechaActual;
-    document.getElementById('registroFecha').value = this.fechaActual;
-    document.getElementById('resumenFecha').value = this.fechaActual;
-    document.getElementById('pesoFecha').value = this.fechaActual;
+    const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+    setText('todayDate', hoy.toLocaleDateString('es-MX', opciones));
+    setVal('dashboardFecha', this.fechaActual);
+    setVal('registroFecha', this.fechaActual);
+    setVal('resumenFecha', this.fechaActual);
+    setVal('pesoFecha', this.fechaActual);
   }
 
   // ==================== TAB BUSCAR (NUTRICIÓN) ====================
