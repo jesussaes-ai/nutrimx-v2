@@ -82,9 +82,17 @@ class NutriApp {
     try {
       // Alimentos
       const alimentosGuardados = localStorage.getItem('nutrimx_alimentos');
+      let guardadosValidos = false;
       if (alimentosGuardados) {
-        this.alimentos = JSON.parse(alimentosGuardados);
-      } else if (this.ciencia && this.ciencia.alimentos) {
+        try {
+          const parsed = JSON.parse(alimentosGuardados);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            this.alimentos = parsed;
+            guardadosValidos = true;
+          }
+        } catch (e) { /* datos corruptos: reconstruir */ }
+      }
+      if (!guardadosValidos && this.ciencia && this.ciencia.alimentos) {
         this.alimentos = this.ciencia.alimentos.map((a, i) => ({
           id: i + 1,
           nombre: a.nombre,
