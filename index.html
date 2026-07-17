@@ -233,6 +233,37 @@
     .foto-acciones select { max-width:180px; }
     .foto-nota { font-size:.7rem; color:#9ca3af; margin-top:10px; }
 
+    /* ===== Perfiles (Para ti) ===== */
+    .perfil-selector { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-bottom:16px; }
+    .perfil-btn { display:flex; flex-direction:column; align-items:center; gap:4px; padding:14px 8px; border-radius:14px; border:2px solid #e5e7eb; background:#fff; font-size:1.6rem; cursor:pointer; transition:.15s; }
+    .perfil-btn span { font-size:.8rem; font-weight:600; color:#374151; }
+    .perfil-btn:hover { border-color:#6ee7b7; }
+    .perfil-btn.activo { border-color:#059669; background:#ecfdf5; box-shadow:0 2px 10px rgba(5,150,105,.15); }
+    .perfil-intro { font-size:.9rem; color:#374151; background:#f0fdf4; border-left:4px solid #059669; padding:10px 14px; border-radius:8px; margin-bottom:14px; }
+    .perfil-subtabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+    .perfil-subtab { padding:8px 14px; border-radius:9999px; border:1px solid #d1d5db; background:#fff; font-size:.85rem; font-weight:600; cursor:pointer; }
+    .perfil-subtab.activo { background:#059669; color:#fff; border-color:#059669; }
+    .perfil-nota { font-size:.82rem; color:#6b7280; margin-bottom:12px; }
+    .perfil-h4 { font-weight:700; margin:16px 0 8px; }
+    .perfil-rutina { border:1px solid #e5e7eb; border-radius:12px; margin-bottom:8px; overflow:hidden; }
+    .perfil-rutina-head { padding:12px 14px; font-weight:600; font-size:.9rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; background:#f9fafb; }
+    .perfil-flecha { transition:.2s; }
+    .perfil-rutina.abierta .perfil-flecha { transform:rotate(180deg); }
+    .perfil-rutina-lista { display:none; padding:10px 18px 14px 28px; font-size:.85rem; color:#374151; list-style:disc; }
+    .perfil-rutina-lista li { margin-bottom:5px; }
+    .perfil-rutina.abierta .perfil-rutina-lista { display:block; }
+    .perfil-puntos { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
+    .perfil-punto { border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fff; }
+    .perfil-punto-t { font-weight:700; font-size:.85rem; margin-bottom:4px; }
+    .perfil-punto-d { font-size:.8rem; color:#4b5563; }
+    .perfil-menu { list-style:none; padding:0; }
+    .perfil-menu li { background:#f9fafb; border-radius:8px; padding:8px 12px; margin-bottom:6px; font-size:.85rem; }
+    .perfil-supl { display:flex; gap:12px; align-items:flex-start; border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin-bottom:8px; background:#fff; }
+    .perfil-supl-grado { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.8rem; color:#fff; }
+    .grado-A { background:#059669; } .grado-B { background:#0284c7; } .grado-Bx { background:#0284c7; } .grado-C { background:#9ca3af; } .grado-warn { background:#dc2626; }
+    .perfil-aviso { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; border-radius:12px; padding:12px 14px; font-size:.82rem; margin-top:14px; }
+    .perfil-disclaimer { font-size:.7rem; color:#9ca3af; margin-top:14px; }
+
     /* ===== Videoteca ===== */
     .video-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
     .video-card { position:relative; border-radius:12px; overflow:hidden; cursor:pointer; aspect-ratio:16/10; background:#111; }
@@ -263,6 +294,7 @@
       <button class="nav-tab active" role="tab" data-tab="dashboard" aria-selected="true">📊 Dashboard</button>
       <button class="nav-tab" role="tab" data-tab="nutricion" aria-selected="false">🥗 Nutrición</button>
       <button class="nav-tab" role="tab" data-tab="ejercicio" aria-selected="false">💪 Ejercicio</button>
+      <button class="nav-tab" role="tab" data-tab="perfiles" aria-selected="false">👨‍👩‍👧 Para ti</button>
       <button class="nav-tab" role="tab" data-tab="suplementos" aria-selected="false">💊 Suplementos</button>
       <button class="nav-tab" role="tab" data-tab="medico" aria-selected="false">🏥 Médico</button>
       <button class="nav-tab" role="tab" data-tab="conducta" aria-selected="false">🧠 Conducta</button>
@@ -407,6 +439,21 @@
     </section>
 
     <!-- TAB: EJERCICIO -->
+    <!-- ==================== TAB PARA TI (PERFILES) ==================== -->
+    <section id="tab-perfiles" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-perfiles">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold mb-2">👨‍👩‍👧 Ejercicio, alimentación y suplementos para ti</h2>
+        <p class="text-sm text-gray-500">Cada cuerpo es distinto. Elige tu perfil y recibe recomendaciones adaptadas con rutinas y videos.</p>
+      </div>
+      <div class="perfil-selector">
+        <button class="perfil-btn activo" data-perfil="hombre">👨<span>Hombre</span></button>
+        <button class="perfil-btn" data-perfil="mujer">👩<span>Mujer</span></button>
+        <button class="perfil-btn" data-perfil="ninos">🧒<span>Niños</span></button>
+        <button class="perfil-btn" data-perfil="mayores">🧓<span>Adultos mayores</span></button>
+      </div>
+      <div id="perfilContenido" class="card p-4"></div>
+    </section>
+
     <section id="tab-ejercicio" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-ejercicio">
       <div class="mb-4">
         <h2 class="text-lg font-bold mb-2">Protocolos de Ejercicio Basados en Evidencia (ACSM/NSCA)</h2>
@@ -1720,6 +1767,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="./ciencia.js"></script>
   <script src="./nube.js"></script>
+  <script src="./perfiles.js"></script>
   <script src="./app.js"></script>
   <script>
     // Videoteca: reproducir al tocar (lazy embed, sin cookies)
