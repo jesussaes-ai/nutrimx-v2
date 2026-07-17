@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#006847">
+  <meta name="description" content="NutriMX v2.0 — Sistema Integral de Recomposición Corporal Basado en Evidencia. Nutrición + Ejercicio + Suplementos + Comportamiento + Médico + Tradición Mexicana. Guías AACE/ACSM/ISSN/Cochrane.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NutriMX">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+  <title>NutriMX v2.0 — Recomposición Corporal Basada en Evidencia</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde-mex: #006847;
+      --verde-claro: #00a859;
+      --verde-oscuro: #004d33;
+      --blanco: #ffffff;
+      --rojo-mex: #ce1126;
+      --oro: #ffd700;
+      --bg: #f0fdf4;
+      --card: #ffffff;
+      --border: #d1fae5;
+      --text: #064e3b;
+      --muted: #6b8e7a;
+      --accent: #00a859;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --purple: #7c3aed;
+      --blue: #2563eb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #022c1a;
+        --card: #053b24;
+        --border: #065f3a;
+        --text: #d1fae5;
+        --muted: #6ee7b7;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .app-header {
+      position: sticky; top: 0; z-index: 50;
+      background: linear-gradient(135deg, var(--verde-mex), var(--verde-claro));
+      color: var(--blanco);
+      box-shadow: 0 4px 20px rgba(0,104,71,0.3);
+    }
+    .nav-tabs { display: flex; overflow-x: auto; scrollbar-width: none; }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex: 0 0 auto; padding: 0.875rem 1.25rem; font-weight: 600; font-size: 0.8125rem;
+      color: rgba(255,255,255,0.8); border-bottom: 3px solid transparent;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .nav-tab.active { color: var(--blanco); border-bottom-color: var(--oro); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.875rem;
+      border: none; cursor: pointer; transition: all 0.15s;
+    }
+    .btn-primary { background: var(--verde-mex); color: var(--blanco); }
+    .btn-primary:active { transform: scale(0.98); background: #005439; }
+    .btn-secondary { background: var(--border); color: var(--verde-mex); }
+    .btn-secondary:active { background: #a7f3d0; }
+    .btn-danger { background: var(--danger); color: var(--blanco); }
+    .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.8125rem; }
+    .input {
+      width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--border);
+      border-radius: 0.75rem; background: var(--bg); color: var(--text);
+      font-size: 1rem; transition: border-color 0.15s;
+    }
+    .input:focus { outline: none; border-color: var(--verde-claro); }
+    .badge {
+      display: inline-flex; align-items: center; padding: 0.25rem 0.75rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 600;
+    }
+    .badge-grA { background: #dcfce7; color: #166534; }
+    .badge-grB { background: #dbeafe; color: #1e40af; }
+    .badge-grC { background: #fee2e2; color: #991b1b; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-purple { background: #f3e8ff; color: #7e22ce; }
+    .badge-orange { background: #ffedd5; color: #c2410c; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-gray { background: #f3f4f6; color: #374151; }
+    .macro-bar { height: 0.75rem; border-radius: 9999px; background: var(--border); overflow: hidden; }
+    .macro-fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease; }
+    .macro-prot { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .macro-carb { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+    .macro-fat { background: linear-gradient(90deg, #f59e0b, #d97706); }
+    .food-item {
+      display: flex; align-items: center; gap: 1rem; padding: 1rem;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 0.75rem;
+      transition: all 0.15s;
+    }
+    .food-item:active { background: #e8f5e9; transform: scale(0.99); }
+    .food-info { flex: 1; min-width: 0; }
+    .food-name { font-weight: 600; font-size: 0.9375rem; }
+    .food-macros { font-size: 0.7rem; color: var(--muted); display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.25rem; }
+    .food-macro { display: inline-flex; align-items: center; gap: 0.25rem; }
+    .portion-input {
+      width: 64px; padding: 0.5rem; text-align: center;
+      border: 2px solid var(--border); border-radius: 0.5rem;
+      background: var(--card); color: var(--text); font-weight: 600;
+    }
+    .portion-input:focus { outline: none; border-color: var(--verde-claro); }
+    .meal-section { border-left: 4px solid var(--verde-mex); padding-left: 1rem; margin-bottom: 1.5rem; }
+    .meal-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .meal-icon { width: 2rem; height: 2rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.125rem; }
+    .desayuno { background: #fef3c7; color: #b45309; }
+    .comida { background: #dbeafe; color: #1e40af; }
+    .cena { background: #f3e8ff; color: #7e22ce; }
+    .colacion { background: #dcfce7; color: #166534; }
+    .logged-food { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px dashed var(--border); }
+    .logged-food:last-child { border-bottom: none; }
+    .logged-info { flex: 1; min-width: 0; }
+    .logged-name { font-weight: 500; font-size: 0.875rem; }
+    .logged-macros { font-size: 0.65rem; color: var(--muted); display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+    .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+    .progress-ring { transform: rotate(-90deg); }
+    .progress-ring-bg { fill: none; stroke: var(--border); stroke-width: 4; }
+    .progress-ring-fill { fill: none; stroke: var(--verde-claro); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 0.5s; }
+    .install-banner {
+      position: fixed; bottom: 1rem; left: 1rem; right: 1rem; max-width: 480px; margin: 0 auto; z-index: 100;
+      background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15); animation: slideUp 0.4s ease;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .toast { position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%); z-index: 200; padding: 1rem 1.5rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.875rem; box-shadow: 0 10px 40px rgba(0,0,0,0.15); animation: slideUp 0.3s ease; }
+    .toast-success { background: var(--verde-mex); color: var(--blanco); }
+    .toast-error { background: var(--danger); color: var(--blanco); }
+    .toast-info { background: var(--text); color: var(--blanco); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: flex-end; padding: 1rem; opacity: 0; visibility: hidden; transition: all 0.2s; }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal { background: var(--card); border-radius: 1rem 1rem 0 0; width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s ease; }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .search-highlight { background: #fef08a; padding: 0 0.125rem; border-radius: 0.125rem; }
+    .weight-trend { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; font-weight: 600; }
+    .trend-down { color: #16a34a; }
+    .trend-up { color: #dc2626; }
+    .trend-stable { color: #f59e0b; }
+    .evidence-tag { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.65rem; font-weight: 700; padding: 0.125rem 0.5rem; border-radius: 9999px; }
+    .evidence-A { background: #dcfce7; color: #166534; }
+    .evidence-B { background: #dbeafe; color: #1e40af; }
+    .evidence-C { background: #fef3c7; color: #92400e; }
+    .evidence-D { background: #fee2e2; color: #991b1b; }
+    @media (min-width: 768px) {
+      .app-header { border-radius: 0 0 2rem 2rem; }
+      .nav-tab { padding: 1rem 2rem; }
+    }
+    @media (max-width: 480px) {
+      .food-macros { gap: 0.5rem; }
+      .logged-macros { flex-direction: column; gap: 0.125rem; }
+    }
+    .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .accordion-content.open { max-height: 500px; }
+    .exercise-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; margin-bottom: 0.5rem; }
+    .exercise-info { flex: 1; }
+    .exercise-name { font-weight: 600; }
+    .exercise-details { font-size: 0.75rem; color: var(--muted); display: flex; gap: 1rem; flex-wrap: wrap; }
+    .supplement-card { border-left: 4px solid; padding: 1rem; background: var(--bg); border-radius: 0 0.75rem 0.75rem 0; margin-bottom: 0.75rem; }
+    .supplement-A { border-color: #22c55e; }
+    .supplement-B { border-color: #3b82f6; }
+    .supplement-C { border-color: #f59e0b; }
+    .supplement-D { border-color: #ef4444; }
+    .tab-btn { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; font-size: 0.8125rem; border: 1px solid var(--border); background: var(--card); color: var(--text); transition: all 0.15s; }
+    .tab-btn.active { background: var(--verde-mex); color: var(--blanco); border-color: var(--verde-mex); }
+    .progress-step { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.75rem; margin-bottom: 0.75rem; }
+    .progress-step-number { width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--verde-mex); color: var(--blanco); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+    .progress-step-content { flex: 1; }
+    .progress-step-title { font-weight: 600; margin-bottom: 0.25rem; }
+    .progress-step-desc { font-size: 0.8125rem; color: var(--muted); }
+    .checklist-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; margin-bottom: 0.5rem; }
+    .checklist-item input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: var(--verde-mex); }
+    .protocol-card { background: linear-gradient(135deg, var(--verde-mex) 0%, var(--verde-claro) 100%); color: var(--blanco); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1rem; }
+    .protocol-card h4 { margin: 0 0 0.5rem; font-size: 1.125rem; }
+    .protocol-card p { margin: 0; opacity: 0.9; font-size: 0.875rem; }
+    .reference { font-size: 0.7rem; color: var(--muted); font-style: italic; margin-top: 0.5rem; display: block; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🧬</span>
+        <h1 class="text-xl font-bold">NutriMX v2.0</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="todayDate" class="text-sm opacity-80 hidden sm:block"></span>
+        <button id="installBtn" class="btn btn-secondary px-3 py-1.5 text-xs hidden" aria-label="Instalar app">Instalar</button>
+      </div>
+    </div>
+    <nav class="nav-tabs px-4 pb-3" role="tablist" aria-label="Navegación principal">
+      <button class="nav-tab active" role="tab" data-tab="dashboard" aria-selected="true">📊 Dashboard</button>
+      <button class="nav-tab" role="tab" data-tab="nutricion" aria-selected="false">🥗 Nutrición</button>
+      <button class="nav-tab" role="tab" data-tab="ejercicio" aria-selected="false">💪 Ejercicio</button>
+      <button class="nav-tab" role="tab" data-tab="suplementos" aria-selected="false">💊 Suplementos</button>
+      <button class="nav-tab" role="tab" data-tab="medico" aria-selected="false">🏥 Médico</button>
+      <button class="nav-tab" role="tab" data-tab="conducta" aria-selected="false">🧠 Conducta</button>
+      <button class="nav-tab" role="tab" data-tab="mexicano" aria-selected="false">🇲🇽 México</button>
+      <button class="nav-tab" role="tab" data-tab="tracking" aria-selected="false">📈 Tracking</button>
+      <button class="nav-tab" role="tab" data-tab="ajustes" aria-selected="false">⚙️ Ajustes</button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-4 md:p-6 max-w-5xl mx-auto w-full">
+    <!-- TAB: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-content" role="tabpanel" aria-labelledby="tab-dashboard">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold">Dashboard de Recomposición</h2>
+        <input type="date" id="dashboardFecha" class="input w-auto px-3" aria-label="Fecha del dashboard">
+      </div>
+      
+      <!-- Caloric Ring + Macros -->
+      <div class="card p-6 mb-4 text-center">
+        <div class="relative inline-block mb-4">
+          <svg class="progress-ring" width="160" height="160">
+            <circle class="progress-ring-bg" cx="80" cy="80" r="70"></circle>
+            <circle class="progress-ring-fill" cx="80" cy="80" r="70" id="kcalRing"></circle>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <span id="kcalConsumidas" class="text-4xl font-bold">0</span>
+            <span class="text-sm text-gray-500">de <span id="kcalObjetivo">1800</span> kcal</span>
+            <span class="text-xs text-gray-400 mt-1" id="kcalPct">0%</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div class="text-2xl font-bold text-green-600" id="protTotal">0g</div>
+            <div class="text-xs text-gray-500">Proteína</div>
+            <div class="macro-bar mt-1"><div class="macro-fill macro-prot" id="protBar" style="width: 0%"></div></div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-blue-600" id="carbTotal">0g</div>
+            <div class="text-xs text-gray-500">Carbohidratos</div>
+            <div class="macro-bar mt-1"><div class="macro-fill macro-carb" id="carbBar" style="width: 0%"></div></div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-amber-600" id="fatTotal">0g</div>
+            <div class="text-xs text-gray-500">Grasa</div>
+            <div class="macro-bar mt-1"><div class="macro-fill macro-fat" id="fatBar" style="width: 0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fibra + Agua + Distribución -->
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-green-700" id="fibraTotal">0g</div>
+          <div class="text-sm text-gray-500">Fibra (meta 25-30g)</div>
+          <div class="macro-bar mt-2"><div class="macro-fill macro-prot" id="fibraBar" style="width: 0%"></div></div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-blue-700" id="aguaTotal">0</div>
+          <div class="text-sm text-gray-500">Vasos de agua (meta 8)</div>
+          <div class="flex justify-center gap-1 mt-2" id="aguaVasos"></div>
+        </div>
+      </div>
+
+      <div class="card p-4 mb-4">
+        <h3 class="font-bold mb-3">Distribución por Comida</h3>
+        <div class="space-y-2" id="distribucionComidas">
+          <div class="flex items-center gap-3">
+            <span class="w-20 text-sm font-medium text-amber-700">Desayuno</span>
+            <div class="flex-1 macro-bar"><div class="macro-fill macro-prot" id="distDesayuno" style="width: 0%"></div></div>
+            <span class="w-20 text-right text-sm" id="distDesayunoKcal">0 kcal</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-20 text-sm font-medium text-blue-700">Comida</span>
+            <div class="flex-1 macro-bar"><div class="macro-fill macro-carb" id="distComida" style="width: 0%"></div></div>
+            <span class="w-20 text-right text-sm" id="distComidaKcal">0 kcal</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-20 text-sm font-medium text-purple-700">Cena</span>
+            <div class="flex-1 macro-bar"><div class="macro-fill macro-fat" id="distCena" style="width: 0%"></div></div>
+            <span class="w-20 text-right text-sm" id="distCenaKcal">0 kcal</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-20 text-sm font-medium text-green-700">Colación</span>
+            <div class="flex-1 macro-bar"><div class="macro-fill" style="background:#84cc16" id="distColacion" style="width: 0%"></div></div>
+            <span class="w-20 text-right text-sm" id="distColacionKcal">0 kcal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button class="btn btn-primary flex-1" id="btnAgua">+ Vaso agua</button>
+        <button class="btn btn-secondary flex-1" id="btnCompartir">Compartir</button>
+      </div>
+    </section>
+
+    <!-- TAB: NUTRICIÓN -->
+    <section id="tab-nutricion" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-nutricion">
+      <div class="mb-4">
+        <label class="sr-only" for="searchInput">Buscar alimentos</label>
+        <div class="relative">
+          <input type="search" id="searchInput" class="input pl-10 pr-4" placeholder="Buscar: pollo, nopal, tortilla, aguacate..." aria-label="Buscar alimentos">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xl">🔍</span>
+        </div>
+      </div>
+      <div class="flex gap-2 mb-4 overflow-x-auto scrollbar-hide pb-2" role="group" aria-label="Filtros por categoría">
+        <button class="filter-btn badge badge-green px-3 py-1.5 text-sm" data-cat="all">Todas</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-emerald-100 text-emerald-800" data-cat="Proteína">🥩 Proteína</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-green-100 text-green-800" data-cat="Verdura">🥬 Verdura</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-amber-100 text-amber-800" data-cat="Fruta">🍎 Fruta</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-yellow-100 text-yellow-800" data-cat="Cereal">🌾 Cereal</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-blue-100 text-blue-800" data-cat="Lácteo">🧀 Lácteo</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-purple-100 text-purple-800" data-cat="Fruto seco">🥜 Fruto seco</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-orange-100 text-orange-800" data-cat="Legumbre">🫘 Legumbre</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-red-100 text-red-800" data-cat="Grasa">🛢️ Grasa</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-gray-100 text-gray-800" data-cat="Especia">🌿 Especia</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-gray-100 text-gray-800" data-cat="Bebida">☕ Bebida</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-gray-100 text-gray-800" data-cat="Fermentado">🍶 Fermentado</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-gray-100 text-gray-800" data-cat="Suplemento">💊 Suplemento</button>
+        <button class="filter-btn badge px-3 py-1.5 text-sm bg-gray-100 text-gray-800" data-cat="Medicamento">💊 Medicamento</button>
+      </div>
+      <div id="searchResults" class="space-y-3" role="list" aria-label="Resultados de búsqueda"></div>
+      <div id="emptySearch" class="empty-state hidden">
+        <div class="empty-icon">🔍</div>
+        <p>Escribe para buscar entre 100+ alimentos con evidencia científica</p>
+      </div>
+    </section>
+
+    <!-- TAB: EJERCICIO -->
+    <section id="tab-ejercicio" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-ejercicio">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold mb-2">Protocolos de Ejercicio Basados en Evidencia (ACSM/NSCA)</h2>
+        <p class="text-sm text-gray-500">Selecciona tu nivel. La fuerza es la base metabólica; cardio y NEAT son herramientas de gasto extra.</p>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">📋 Selecciona tu Programa</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button class="tab-btn active" data-program="fb3">Full Body 3x/sem<br><span class="text-xs font-normal opacity-75">Principiante/Intermedio</span></button>
+            <button class="tab-btn" data-program="ul4">Upper/Lower 4x/sem<br><span class="text-xs font-normal opacity-75">Intermedio/Avanzado</span></button>
+            <button class="tab-btn" data-program="ppl6">Push/Pull/Legs 6x/sem<br><span class="text-xs font-normal opacity-75">Avanzado</span></button>
+          </div>
+        </div>
+
+        <div id="programDetail" class="space-y-4">
+          <!-- Full Body 3x -->
+          <div id="prog-fb3" class="program-content">
+            <div class="protocol-card">
+              <h4>🏋️ Full Body 3x/semana (Lun/Mié/Vie)</h4>
+              <p>Frecuencia óptima para principiantes/intermedios. 3 sesiones fuerza + cardio post-entreno + NEAT diario.</p>
+            </div>
+            <div class="space-y-3">
+              <div class="exercise-item">
+                <div class="exercise-info">
+                  <div class="exercise-name">Sentadilla Goblet / Barra</div>
+                  <div class="exercise-details">3 series × 8-10 rep @ RPE 8 · Compuesto · Pierna</div>
+                </div>
+                <span class="badge badge-green">Fuerza</span>
+              </div>
+              <div class="exercise-item">
+                <div class="exercise-info">
+                  <div class="exercise-name">Peso Muerto Rumano / KB Swing</div>
+                  <div class="exercise-details">3 × 10-12 @ RPE 8 · Compuesto · Cadena posterior</div>
+                </div>
+                <span class="badge badge-green">Fuerza</span>
+              </div>
+              <div class="exercise-item">
+                <div class="exercise-info">
+                  <div class="exercise-name">Press Banca / Mancuernas / Push-ups</div>
+                  <div class="exercise-details">3 × 8-12 @ RPE 8 · Empuje horizontal</div>
+                </div>
+                <span class="badge badge-blue">Hipertrofia</span>
+              </div>
+              <div class="exercise-item">
+                <div class="exercise-info">
+                  <div class="exercise-name">Remo 1 mano / Polea / Dominadas asistidas</div>
+                  <div class="exercise-details">3 × 10-12 @ RPE 8 · Tracción horizontal</div>
+                </div>
+                <span class="badge badge-blue">Hipertrofia</span>
+              </div>
+              <div class="exercise-item">
+                <div class="exercise-info">
+                  <div class="exercise-name">Press Militar / Landmine</div>
+                  <div class="exercise-details">3 × 8-10 @ RPE 8 · Empuje vertical</div>
+                </div>
+                <span class="badge badge-blue">Hipertrofia</span>
+              </div>
+              <div class="exercise-item">
+                <div class="exercise-info">
+                  <div class="exercise-name">Plancha / Dead Bug / Pallof Press</div>
+                  <div class="exercise-details">3 × 30-45s @ RPE 8 · Core anti-rotación</div>
+                </div>
+                <span class="badge badge-purple">Core</span>
+              </div>
+              <div class="exercise-item">
+                <div class="exercise-info">
+                  <div class="exercise-name">Carga Farmers Walk / Sentadilla Búlgara</div>
+                  <div class="exercise-details">3 × 10-12/pierna @ RPE 8 · Unilateral</div>
+                </div>
+                <span class="badge badge-orange">Unilateral</span>
+              </div>
+            </div>
+            <div class="card p-4 mt-4 bg-amber-50 border-amber-200">
+              <h4 class="font-bold text-amber-800 mb-2">🏃 Cardio Post-Entreno</h4>
+              <p class="text-sm text-amber-700">HIIT 10-15min (10s sprint / 50s caminar ×5-8) O LISS 20-30min Zona 2 (FC 120-135)</p>
+            </div>
+            <div class="card p-4 mt-2 bg-green-50 border-green-200">
+              <h4 class="font-bold text-green-800 mb-2">🚶 NEAT Días No Entreno</h4>
+              <p class="text-sm text-green-700">8000-10000 pasos. Caminar 10-15min post cada comida (glucosa ↓ 20-30%).</p>
+            </div>
+          </div>
+
+          <!-- Upper/Lower 4x -->
+          <div id="prog-ul4" class="program-content hidden">
+            <div class="protocol-card">
+              <h4>🏋️ Upper/Lower 4x/semana</h4>
+              <p>Split clásico intermedio/avanzado. 2 upper + 2 lower + cardio estratégico + NEAT diario.</p>
+            </div>
+            <div class="accordion">
+              <button class="accordion-trigger w-full text-left p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between" data-target="ul-upperA">
+                <span class="font-bold">Upper A (Fuerza Empuje/Tracción)</span>
+                <span class="text-xl">▼</span>
+              </button>
+              <div id="ul-upperA" class="accordion-content space-y-2">
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Press Banca Barra</div><div class="exercise-details">4 × 6-8 @ RPE 8</div></div><span class="badge badge-green">Fuerza</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Remo Barra Pronado</div><div class="exercise-details">4 × 8-10 @ RPE 8</div></div><span class="badge badge-green">Fuerza</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Press Militar Mancuernas</div><div class="exercise-details">3 × 8-10 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Dominadas / Jalón Pecho</div><div class="exercise-details">3 × 8-12 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Curl Bíceps / Extensiones Tríceps</div><div class="exercise-details">3 × 12-15 @ RPE 8</div></div><span class="badge badge-purple">Accesorio</span></div>
+              </div>
+
+              <button class="accordion-trigger w-full text-left p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between mt-2" data-target="ul-lowerA">
+                <span class="font-bold">Lower A (Fuerza Pierna/Cadena Posterior)</span>
+                <span class="text-xl">▼</span>
+              </button>
+              <div id="ul-lowerA" class="accordion-content space-y-2">
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Sentadilla Libre / Hack</div><div class="exercise-details">4 × 6-8 @ RPE 8</div></div><span class="badge badge-green">Fuerza</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Peso Muerto Convencional</div><div class="exercise-details">3 × 6-8 @ RPE 8</div></div><span class="badge badge-green">Fuerza</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Prensa 45° / Zancadas</div><div class="exercise-details">3 × 10-12 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Curl Femoral / Nórdico</div><div class="exercise-details">3 × 10-12 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Elevación Talones</div><div class="exercise-details">4 × 15-20 @ RPE 8</div></div><span class="badge badge-purple">Accesorio</span></div>
+              </div>
+
+              <button class="accordion-trigger w-full text-left p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between mt-2" data-target="ul-upperB">
+                <span class="font-bold">Upper B (Hipertrofia/Volumen)</span>
+                <span class="text-xl">▼</span>
+              </button>
+              <div id="ul-upperB" class="accordion-content space-y-2">
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Press Inclinado Mancuernas</div><div class="exercise-details">4 × 8-10 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Remo 1 Mano Mancuerna</div><div class="exercise-details">4 × 10-12 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Press Militar Barra</div><div class="exercise-details">3 × 8-10 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Face Pulls / Rear Delt</div><div class="exercise-details">3 × 15-20 @ RPE 8</div></div><span class="badge badge-purple">Salud Hombro</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Fondos / Extensiones Cuerda</div><div class="exercise-details">3 × 10-12 @ RPE 8</div></div><span class="badge badge-purple">Accesorio</span></div>
+              </div>
+
+              <button class="accordion-trigger w-full text-left p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between mt-2" data-target="ul-lowerB">
+                <span class="font-bold">Lower B (Unilateral/Glúteos)</span>
+                <span class="text-xl">▼</span>
+              </button>
+              <div id="ul-lowerB" class="accordion-content space-y-2">
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Sentadilla Frontal / Búlgara</div><div class="exercise-details">4 × 8-10 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Peso Muerto Rumano</div><div class="exercise-details">3 × 8-10 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Step-ups / Hip Thrust</div><div class="exercise-details">3 × 10-12 @ RPE 8</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Curl Femoral Sentado</div><div class="exercise-details">3 × 12-15 @ RPE 8</div></div><span class="badge badge-purple">Accesorio</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Abductores / Aductores</div><div class="exercise-details">3 × 15-20 @ RPE 8</div></div><span class="badge badge-purple">Accesorio</span></div>
+              </div>
+            </div>
+            <div class="card p-4 mt-4 bg-amber-50 border-amber-200">
+              <h4 class="font-bold text-amber-800 mb-2">🏃 Cardio Semanal</h4>
+              <p class="text-sm text-amber-700">HIIT post-Upper 10min (sprints 30s/90s ×6-8) + LISS post-Lower 30-45min Zona 2 (FC 120-135)</p>
+            </div>
+          </div>
+
+          <!-- PPL 6x -->
+          <div id="prog-ppl6" class="program-content hidden">
+            <div class="protocol-card">
+              <h4>🏋️ Push/Pull/Legs 6x/semana</h4>
+              <p>Alta frecuencia para avanzados con recuperación optimizada. Push/Pull/Legs ×2 + cardio estratégico.</p>
+            </div>
+            <div class="accordion">
+              <button class="accordion-trigger w-full text-left p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between" data-target="ppl-push">
+                <span class="font-bold">🟢 Push (Pecho/Hombros/Tríceps) ×2</span>
+                <span class="text-xl">▼</span>
+              </button>
+              <div id="ppl-push" class="accordion-content space-y-2">
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Press Banca</div><div class="exercise-details">4 × 6-8</div></div><span class="badge badge-green">Fuerza</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Press Inclinado Mancuernas</div><div class="exercise-details">3 × 8-10</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Press Militar</div><div class="exercise-details">3 × 8-10</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Fondos</div><div class="exercise-details">3 × 10-12</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Elevaciones Laterales</div><div class="exercise-details">4 × 15-20</div></div><span class="badge badge-purple">Delts</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Extensiones Tríceps</div><div class="exercise-details">3 × 12-15</div></div><span class="badge badge-purple">Accesorio</span></div>
+              </div>
+
+              <button class="accordion-trigger w-full text-left p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between mt-2" data-target="ppl-pull">
+                <span class="font-bold">🔵 Pull (Espalda/Bíceps) ×2</span>
+                <span class="text-xl">▼</span>
+              </button>
+              <div id="ppl-pull" class="accordion-content space-y-2">
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Peso Muerto</div><div class="exercise-details">4 × 6-8</div></div><span class="badge badge-green">Fuerza</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Dominadas</div><div class="exercise-details">4 × 8-10</div></div><span class="badge badge-green">Fuerza</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Remo Barra</div><div class="exercise-details">3 × 8-10</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Face Pulls</div><div class="exercise-details">3 × 15-20</div></div><span class="badge badge-purple">Salud Hombro</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Curl Bíceps</div><div class="exercise-details">3 × 10-12</div></div><span class="badge badge-purple">Accesorio</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Curl Martillo</div><div class="exercise-details">3 × 10-12</div></div><span class="badge badge-purple">Accesorio</span></div>
+              </div>
+
+              <button class="accordion-trigger w-full text-left p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between mt-2" data-target="ppl-legs">
+                <span class="font-bold">🟤 Legs (Cuádriceps/Isquios/Glúteos) ×2</span>
+                <span class="text-xl">▼</span>
+              </button>
+              <div id="ppl-legs" class="accordion-content space-y-2">
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Sentadilla</div><div class="exercise-details">4 × 6-8</div></div><span class="badge badge-green">Fuerza</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Peso Muerto Rumano</div><div class="exercise-details">3 × 8-10</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Prensa 45°</div><div class="exercise-details">3 × 10-12</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Búlgaras</div><div class="exercise-details">3 × 10-12/pierna</div></div><span class="badge badge-blue">Hipertrofia</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Curl Femoral</div><div class="exercise-details">3 × 12-15</div></div><span class="badge badge-purple">Accesorio</span></div>
+                <div class="exercise-item"><div class="exercise-info"><div class="exercise-name">Gemelos</div><div class="exercise-details">4 × 15-20</div></div><span class="badge badge-purple">Accesorio</span></div>
+              </div>
+            </div>
+            <div class="card p-4 mt-4 bg-amber-50 border-amber-200">
+              <h4 class="font-bold text-amber-800 mb-2">🏃 Cardio Estratégico</h4>
+              <p class="text-sm text-amber-700">HIIT 10min post-Push/Pull (sprints 30s/90s ×4-6) + LISS 30min post-Legs Zona 2 + NEAT 10k pasos/día</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HIIT Protocols -->
+      <div class="card p-4 mt-4">
+        <h3 class="font-bold mb-3">⚡ Protocolos HIIT (Meta-análisis: HIIT ≈ MICT para grasa, pero HIIT más eficiente tiempo)</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="card p-3 bg-green-50 border-green-200">
+            <h4 class="font-bold text-green-800">Wingate Modificado</h4>
+            <p class="text-sm text-green-700">30s sprint / 120s rec ×4-6 series. Progresión: +1 serie/sem. Efectivo oxidación grasa.</p>
+          </div>
+          <div class="card p-3 bg-blue-50 border-blue-200">
+            <h4 class="font-bold text-blue-800">Tabata Real</h4>
+            <p class="text-sm text-blue-700">20s máximo / 10s rec ×8 (4min). Solo si base aeróbica sólida. VO2max ↑ rápido.</p>
+          </div>
+          <div class="card p-3 bg-purple-50 border-purple-200">
+            <h4 class="font-bold text-purple-800">Sprints en Cuesta</h4>
+            <p class="text-sm text-purple-700">15s subida / 90s bajada ×6-8. Menor impacto articular. Progresión: +1 sprint/sem.</p>
+          </div>
+          <div class="card p-3 bg-amber-50 border-amber-200">
+            <h4 class="font-bold text-amber-800">Battle Ropes / Assault Bike</h4>
+            <p class="text-sm text-amber-700">20s trabajo / 40s rec ×10. Cuerpo completo. Progresión: +2 series/sem.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEAT Strategies -->
+      <div class="card p-4 mt-4">
+        <h3 class="font-bold mb-3">🚶 Estrategias NEAT (Termogénesis Actividad No Ejercicio) — Meta: 8000-10000 pasos/día</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="checklist-item"><input type="checkbox" id="neat1"><label for="neat1" class="flex-1 text-sm">Caminar 10-15 min post cada comida (glucosa ↓ 20-30%)</label></div>
+          <div class="checklist-item"><input type="checkbox" id="neat2"><label for="neat2" class="flex-1 text-sm">Trabajar de pie / escritorio ajustable 2-4h/día</label></div>
+          <div class="checklist-item"><input type="checkbox" id="neat3"><label for="neat3" class="flex-1 text-sm">Subir escaleras siempre (1 piso = ~10 kcal)</label></div>
+          <div class="checklist-item"><input type="checkbox" id="neat4"><label for="neat4" class="flex-1 text-sm">Parking lejos / bajar 1 parada antes del transporte</label></div>
+          <div class="checklist-item"><input type="checkbox" id="neat5"><label for="neat5" class="flex-1 text-sm">Llamadas caminando / reuniones walking</label></div>
+          <div class="checklist-item"><input type="checkbox" id="neat6"><label for="neat6" class="flex-1 text-sm">Tareas domésticas vigorosas (aspirar, fregar = 150-200 kcal/h)</label></div>
+          <div class="checklist-item"><input type="checkbox" id="neat7"><label for="neat7" class="flex-1 text-sm">Jugar con hijos/mascotas activo</label></div>
+          <div class="checklist-item"><input type="checkbox" id="neat8"><label for="neat8" class="flex-1 text-sm">Estirar/movilidad viendo TV</label></div>
+        </div>
+      </div>
+
+      <!-- Principios -->
+      <div class="card p-4 mt-4">
+        <h3 class="font-bold mb-3">📚 Principios Fundamentales (ACSM/NSCA/ISSN Consenso)</h3>
+        <div class="space-y-2 text-sm">
+          <div class="progress-step">
+            <div class="progress-step-number">1</div>
+            <div class="progress-step-content">
+              <div class="progress-step-title">Fuerza 3-4x/sem: base metabólica, preserva masa magra en déficit</div>
+              <div class="progress-step-desc">Músculo = tejido metabólicamente activo. 1kg músculo ≈ 13 kcal/día en reposo.</div>
+            </div>
+          </div>
+          <div class="progress-step">
+            <div class="progress-step-number">2</div>
+            <div class="progress-step-content">
+              <div class="progress-step-title">Sobrecarga progresiva semanal: +repes, +carga, +series, -descanso, mejor técnica</div>
+              <div class="progress-step-desc">Sin progresión no hay adaptación. Registra tus levantamientos.</div>
+            </div>
+          </div>
+          <div class="progress-step">
+            <div class="progress-step-number">3</div>
+            <div class="progress-step-content">
+              <div class="progress-step-title">Compuestos multiarticulares > aislamientos (sentadilla, peso muerto, press, remo)</div>
+              <div class="progress-step-desc">Mayor reclutamiento motor, mayor gasto calórico, mayor transferencia funcional.</div>
+            </div>
+          </div>
+          <div class="progress-step">
+            <div class="progress-step-number">4</div>
+            <div class="progress-step-content">
+              <div class="progress-step-title">Rangos: 6-12 rep (hipertrofia), 3-5 (fuerza), 15-20 (resistencia metabólica)</div>
+              <div class="progress-step-desc">Periodiza: bloques de 4-6 semanas alternando enfoque.</div>
+            </div>
+          </div>
+          <div class="progress-step">
+            <div class="progress-step-number">5</div>
+            <div class="progress-step-content">
+              <div class="progress-step-title">Cardio = herramienta gasto extra, NO sustituto de fuerza. HIIT 1-2x/sem + LISS/NEAT</div>
+              <div class="progress-step-desc">Meta-análisis: HIIT ≈ MICT para grasa, pero HIIT más eficiente tiempo. No hagas cardio excesivo (cortisol ↑).</div>
+            </div>
+          </div>
+          <div class="progress-step">
+            <div class="progress-step-number">6</div>
+            <div class="progress-step-content">
+              <div class="progress-step-title">Recuperación: 48-72h entre grupos, sueño 7-9h, gestión estrés (cortisol catabólico)</div>
+              <div class="progress-step-desc">El músculo crece DESCANSANDO, no entrenando. Dormir <6h → testosterona ↓ 15%, cortisol ↑, grelina ↑.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: SUPLEMENTOS -->
+    <section id="tab-suplementos" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-suplementos">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold mb-2">Suplementación Basada en Evidencia (ISSN / Examine.com / Cochrane)</h2>
+        <p class="text-sm text-gray-500">Clasificación por grado de evidencia. Solo lo que funciona. Dosis efectivas, no "polvo de hadas".</p>
+      </div>
+
+      <!-- Grado A -->
+      <div class="card p-4 mb-4">
+        <h3 class="font-bold mb-3 flex items-center gap-2"><span class="badge badge-grA">Grado A</span> Evidencia Sólida — Consenso ISSN/Cochrane</h3>
+        <div class="space-y-3">
+          <div class="supplement-card supplement-A">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Creatina Monohidrato</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 5g/día crónico (no requiere carga). <strong>Timing:</strong> Cualquier momento, con carbohidrato opcional.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> 1000+ estudios: fuerza +5-15%, masa magra 1-2kg, recuperación, cognición, seguro renal sano.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Ninguna en sanos. Hidratación adecuada.</div>
+              </div>
+              <span class="badge badge-grA">Grado A</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-A">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Proteína Whey Isolate / Caseína</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 1.6-2.4g/kg/día total (incl. dieta). <strong>Timing:</strong> Whey post-entreno / Caseína pre-sueño.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Perfil AA completo, leucina 11% (trigger MPS), conveniencia, saciedad, completar objetivo proteína.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Intolerancia lactosa → isolate/hidrolizado/vegana.</div>
+              </div>
+              <span class="badge badge-grA">Grado A</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-A">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Cafeína Anhidra</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 3-6 mg/kg (200-400mg) 30-60min pre. <strong>Timing:</strong> Pre-entreno, no >400mg/día, ciclar 4 sem on/2 off.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Fuerza, potencia, resistencia, oxidación grasa ↑, foco, RPE ↓.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Ansiedad, insomnio, HTA no controlada, embarazo.</div>
+              </div>
+              <span class="badge badge-grA">Grado A</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-A">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Omega-3 EPA/DHA (Aceite Pescado/Algal)</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 2-3g EPA+DHA/día (1-2g EPA). <strong>Timing:</strong> Con comida grasa.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Triglicéridos ↓ 20-30%, inflamación ↓, recuperación, cognición, ojos.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Anticoagulantes → médico. Oxidación → certificado IFOS/GOED.</div>
+              </div>
+              <span class="badge badge-grA">Grado A</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-A">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Vitamina D3 (Colecalciferol) + K2 MK-7</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 2000-5000 UI/día según 25(OH)D objetivo 50-80 ng/mL. <strong>Timing:</strong> Con comida grasa + K2 (100-200mcg MK-7).</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Hormona esteroide: testosterona, inmunidad, hueso, estado ánimo, fuerza. Obesidad → sequestro.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Hipercalcemia si >10000 UI crónico sin control.</div>
+              </div>
+              <span class="badge badge-grA">Grado A</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-A">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Melatonina</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 0.3-3mg 30-60min pre-sueño. <strong>Timing:</strong> Noche, luz roja/oscuridad.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Onset sueño, calidad, GH nocturno, antioxidante, ritmo circadiano.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Depresión, anticoagulantes, inmunosupresores → médico.</div>
+              </div>
+              <span class="badge badge-grA">Grado A</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grado B -->
+      <div class="card p-4 mb-4">
+        <h3 class="font-bold mb-3 flex items-center gap-2"><span class="badge badge-grB">Grado B</span> Evidencia Moderada — Efectivo en Contexto Específico</h3>
+        <div class="space-y-3">
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Beta-Alanina</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 3.2-6.4g/día crónico (4-6 sem). <strong>Timing:</strong> Dividido 800-1600mg c/3-4h para evitar parestesias.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Carnosina muscular ↑ → buffer H+ → series 1-4 min ↑ rendimiento 2-3%.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Citrullina Malato 2:1</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 6-8g 40-60min pre. <strong>Timing:</strong> Pre-entreno.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Arginina ↑ → NO → flujo sanguíneo, fatiga ↓, bomba, recuperación.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Extracto Té Verde Estandarizado (EGCG 400-500mg + Cafeína 200mg)</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 3-4x/día. <strong>Timing:</strong> Con comidas.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Oxidación grasa +17% sinergia, termogénesis 24h ↑ 4%.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Hepatotoxicidad raro >800mg EGCG/día en ayunas.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Berberina HCl</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 500mg 3x/día con comidas. <strong>Timing:</strong> Pre-comidas principales.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> AMPK → sensibilidad insulina ≈ metformina, glucosa ↓, lípidos ↓, microbioma.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Interacciona CYP450, embarazo, hipoglucemia si + meds.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Ashwagandha KSM-66</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 600mg/día (300mg x2). <strong>Timing:</strong> Mañana + noche.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Cortisol ↓ 27%, testosterona ↑ 17%, fuerza ↑, sueño ↑, ansiedad ↓.</div>
+                <div class="text-sm text-red-600 mt-1"><strong>Contra:</strong> Hipertiroidismo, embarazo, sedantes, autoinmune.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Probiótico Multi-Cepa (L. gasseri BNR17, L. rhamnosus, B. lactis)</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 10-50B UFC/día. <strong>Timing:</strong> Con comida.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> L. gasseri → grasa visceral ↓ 8.5% 12 sem, L. rhamnosus → peso ♀, B. lactis → inflamación.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Magnesio Glicinato/Bisglicinato</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 400mg elemental noche. <strong>Timing:</strong> Pre-sueño.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> 300+ enzimas, GABA, testosterona libre, sensibilidad insulina, sueño, calambres.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Zinc Picolinato/Quelado</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 15-30mg/día con comida. <strong>Timing:</strong> No con fitatos/calcio/hierro.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Testosterona si deficiente, inmunidad, gustación, próstata, cicatrización.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Vitamina K2 (MK-7)</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 100-200mcg con D3. <strong>Timing:</strong> Con comida grasa.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Carboxila osteocalcina (hueso) + MGP (arterias) → calcio a hueso NO arterias.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+          <div class="supplement-card supplement-B">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1">
+                <div class="font-bold">Boro (Boroquelato)</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Dosis:</strong> 3-6mg/día. <strong>Timing:</strong> Con comida.</div>
+                <div class="text-sm text-gray-600 mt-1"><strong>Evidencia:</strong> Testosterona libre ↑, estradiol ↓, vit D metabolismo, cognición, osteoartritis.</div>
+              </div>
+              <span class="badge badge-grB">Grado B</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grado C / Sin Evidencia -->
+      <div class="card p-4 mb-4">
+        <h3 class="font-bold mb-3 flex items-center gap-2"><span class="badge badge-grC">Grado C / Sin Evidencia Sólida</span> Evita — Marketing > Ciencia</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="badge badge-grC text-left p-2">Quemadores grasa comerciales (mezclas propietarias, subdosis)</div>
+          <div class="badge badge-grC text-left p-2">CLA (ácido linoleico conjugado) — efecto nulo en humanos</div>
+          <div class="badge badge-grC text-left p-2">L-carnitina oral (no cruza BBB, solo IV funciona)</div>
+          <div class="badge badge-grC text-left p-2">Garcinia cambogia / HCA — meta-análisis nulo</div>
+          <div class="badge badge-grC text-left p-2">Cetonas exógenas (no queman grasa, sustrato alternativo)</div>
+          <div class="badge badge-grC text-left p-2">Detox / teatox / laxantes (pérdida agua, peligroso)</div>
+          <div class="badge badge-grC text-left p-2">Bloqueadores carbohidratos (faseolamina — efecto mínimo)</div>
+          <div class="badge badge-grC text-left p-2">"Testosterone boosters" mezclas (tribulus, fenugreek, DAA — evidencia débil)</div>
+        </div>
+      </div>
+
+      <!-- Medicamentos (Solo Referencia) -->
+      <div class="card p-4 mb-4 border-l-4 border-red-500 bg-red-50">
+        <h3 class="font-bold mb-2 flex items-center gap-2"><span class="badge badge-red">⚠️ Solo Referencia Educativa</span> Medicamentos — Requieren Endocrinólogo</h3>
+        <div class="space-y-2 text-sm">
+          <div class="bg-white p-3 rounded border">
+            <div class="font-semibold">Semaglutida (Ozempic/Wegovy)</div>
+            <div>GLP-1 RA: peso -15% a 68 sem, saciedad, glucosa. Requiere endocrino, efectos GI, costo, recupera peso si suspende.</div>
+          </div>
+          <div class="bg-white p-3 rounded border">
+            <div class="font-semibold">Tirzepatida (Mounjaro/Zepbound)</div>
+            <div>GIP/GLP-1 dual: peso -20%+, superior semaglutida. Endocrino obligatorio.</div>
+          </div>
+          <div class="bg-white p-3 rounded border">
+            <div class="font-semibold">Metformina</div>
+            <div>AMPK, sensibilidad insulina, modesto peso -2-3kg, longevidad, bajo costo.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: MÉDICO -->
+    <section id="tab-medico" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-medico">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold mb-2">Módulo Médico / Endocrinología — Guías AACE/ACE 2023-2025, ADA, EASO</h2>
+        <p class="text-sm text-gray-500">Solo referencia educativa. Diagnóstico y tratamiento requieren profesional colegiado.</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Criterios Obesidad -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">📏 Criterios Diagnósticos Obesidad (AACE/ACE/EASO)</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="card p-3 bg-blue-50 border-blue-200">
+              <h4 class="font-bold text-blue-800 mb-2">IMC</h4>
+              <div class="space-y-1 text-sm">
+                <div><span class="font-medium">Normal:</span> 18.5-24.9</div>
+                <div><span class="font-medium">Sobrepeso:</span> 25-29.9</div>
+                <div><span class="font-medium">Obesidad I:</span> 30-34.9</div>
+                <div><span class="font-medium">Obesidad II:</span> 35-39.9</div>
+                <div><span class="font-medium">Obesidad III:</span> ≥40</div>
+              </div>
+            </div>
+            <div class="card p-3 bg-red-50 border-red-200">
+              <h4 class="font-bold text-red-800 mb-2">Circunferencia Cintura (Riesgo Cardiometabólico)</h4>
+              <div class="space-y-1 text-sm">
+                <div><span class="font-medium">Hombre Alto:</span> >94 cm | Riesgo: >102 cm</div>
+                <div><span class="font-medium">Mujer Alto:</span> >80 cm | Riesgo: >88 cm</div>
+              </div>
+            </div>
+            <div class="card p-3 bg-purple-50 border-purple-200">
+              <h4 class="font-bold text-purple-800 mb-2">% Grasa Corporal (DEXA/BIA)</h4>
+              <div class="space-y-1 text-sm">
+                <div><span class="font-medium">Hombre:</span> Esencial 2-5% | Atleta 6-13% | Fitness 14-17% | Promedio 18-24% | Obeso >25%</div>
+                <div><span class="font-medium">Mujer:</span> Esencial 10-13% | Atleta 14-20% | Fitness 21-24% | Promedio 25-31% | Obesa >32%</div>
+              </div>
+            </div>
+            <div class="card p-3 bg-green-50 border-green-200">
+              <h4 class="font-bold text-green-800 mb-2">Indicadores Metabólicos (Síndrome Metabólico ≥3)</h4>
+              <div class="space-y-1 text-sm">
+                <div>• Glucosa ayunas ≥100 mg/dL (o T2DM)</div>
+                <div>• TG ≥150 mg/dL</div>
+                <div>• HDL H <40 / M <50 mg/dL</div>
+                <div>• PAS ≥130 o PAD ≥85 (o HTA)</div>
+                <div>• Cintura >102cm H / >88cm M</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Algoritmo Tratamiento -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">🔬 Algoritmo Tratamiento AACE/ACE 2023-2025</h3>
+          <div class="space-y-3">
+            <div class="progress-step">
+              <div class="progress-step-number">1</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Estilo de Vida Intensivo (6 meses)</div>
+                <div class="progress-step-desc">Déficit 500-750 kcal/día, proteína 1.6-2.4g/kg, fuerza 2-3x/sem, 150-300min cardio/sem, conducta (TCC), sueño 7-9h. Meta: 5-10% peso.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">2</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Farmacoterapia si IMC ≥30 o ≥27 + comorbilidad (tras 3-6 mes estilo de vida insuficiente)</div>
+                <div class="progress-step-desc">Primera línea: Semaglutida 2.4mg (Wegovy) o Tirzepatida 15mg (Zepbound). Segunda: Liraglutida 3mg, Fentermina/Topiramato, Naltrexona/Bupropión. Evaluar cada 3 meses: si <5% peso → cambiar/añadir.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">3</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Cirugía Bariátrica si IMC ≥40 o ≥35 + comorbilidad severa (tras fallo médico)</div>
+                <div class="progress-step-desc">Manga gástrica / Bypass en Y de Roux. Requiere equipo multidisciplinario (endocrino, nutrición, psicología, cirugía). Seguimiento vitalicio.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Labs Recomendados -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">🧪 Panel Laboratorial Recomendado (Baseline + Seguimiento 3-6 meses)</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div class="badge badge-blue p-2 text-left">Glucosa ayunas + HbA1c + Insulina ayunas + HOMA-IR</div>
+            <div class="badge badge-blue p-2 text-left">Perfil Lipídico: CT, LDL, HDL, TG, no-HDL, ApoB</div>
+            <div class="badge badge-blue p-2 text-left">Hepático: AST, ALT, GGT, FA, Albúmina</div>
+            <div class="badge badge-blue p-2 text-left">Renal: Creatinina, eGFR, Ácido úrico</div>
+            <div class="badge badge-blue p-2 text-left">Hormonal: TSH, T4 libre, Testosterona total/libre (H), SHBG, Cortisol 8am</div>
+            <div class="badge badge-blue p-2 text-left">Vitaminas: 25(OH)D, B12, Folato, Ferritina</div>
+            <div class="badge badge-blue p-2 text-left">Inflamación: PCR-us, Adiponectina, Leptina (opcional)</div>
+            <div class="badge badge-blue p-2 text-left">Electrolitos: Na, K, Cl, Mg, Ca, Fosfato</div>
+            <div class="badge badge-blue p-2 text-left">Hemograma completo + Vit D 25(OH)</div>
+          </div>
+        </div>
+
+        <!-- Medicaciones -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">💊 Farmacología Obesidad (AACE/ACE 2025 Preferred Agents)</h3>
+          <div class="space-y-3">
+            <div class="card p-3 bg-green-50 border-green-200">
+              <h4 class="font-bold text-green-800">Primera Línea — Agonistas GLP-1 / Dual GIP/GLP-1</h4>
+              <div class="space-y-2 text-sm mt-2">
+                <div class="bg-white p-2 rounded border"><span class="font-semibold">Semaglutida 2.4mg (Wegovy)</span> — GLP-1 RA semanal. Peso -15% a 68 sem. Efectos GI (náuseas 44%), pancreatitis raro. Costo alto.</div>
+                <div class="bg-white p-2 rounded border"><span class="font-semibold">Tirzepatida 15mg (Zepbound)</span> — GIP/GLP-1 dual semanal. Peso -20%+ a 72 sem. Superior a semaglutida. Mismos efectos GI.</div>
+                <div class="bg-white p-2 rounded border"><span class="font-semibold">Liraglutida 3mg (Saxenda)</span> — GLP-1 RA diaria. Peso -8% a 56 sem. Inyección diaria. Menor eficacia.</div>
+              </div>
+            </div>
+            <div class="card p-3 bg-blue-50 border-blue-200">
+              <h4 class="font-bold text-blue-800">Segunda Línea / Combinaciones</h4>
+              <div class="space-y-2 text-sm mt-2">
+                <div class="bg-white p-2 rounded border"><span class="font-semibold">Fentermina/Topiramato ER (Qsymia)</span> — Simpaticomimético + anticonvulsivante. Peso -10%. Contra: embarazo, glaucoma, cardiopatía.</div>
+                <div class="bg-white p-2 rounded border"><span class="font-semibold">Naltrexona/Bupropión ER (Contrave)</span> — Opioide antagonista + NDRI. Peso -5-8%. Contra: convulsiones, opioides, HTA no controlada.</div>
+                <div class="bg-white p-2 rounded border"><span class="font-semibold">Orlistat (Xenical/Alli)</span> — Inhibidor lipasa intestinal. Peso -3-5%. Efectos GI (esteatorrea). Vit liposolubles ↓.</div>
+              </div>
+            </div>
+            <div class="card p-3 bg-amber-50 border-amber-200">
+              <h4 class="font-bold text-amber-800">Antidiabéticos con Beneficio Peso (Off-label Obesidad)</h4>
+              <div class="space-y-1 text-sm mt-2">
+                <div class="bg-white p-2 rounded border"><span class="font-semibold">Metformina</span> — AMPK, sensibilidad insulina, peso -2-3kg, longevidad, bajo costo. Primera línea T2DM + obesidad.</div>
+                <div class="bg-white p-2 rounded border"><span class="font-semibold">SGLT2i (Empagliflozina, Dapagliflozina)</span> — Glucosuria ~70g/día → ~200-300 kcal/día. Peso -2-3kg. Beneficio renal/cardíaco.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Endocrino Checklist -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">✅ Checklist Consulta Endocrinología</h3>
+          <div class="space-y-2">
+            <div class="checklist-item"><input type="checkbox" id="endo1"><label for="endo1" class="flex-1">Historial completo: peso máximo, intentos previos, medicaciones, cirugías</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo2"><label for="endo2" class="flex-1">Anthropometría completa: peso, talla, IMC, cintura, cadera, % grasa (BIA/DEXA)</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo3"><label for="endo3" class="flex-1">Panel metabólico completo (ver panel laboratorial arriba)</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo4"><label for="endo4" class="flex-1">Evaluación hormonal: TSH, T4L, Testosterona (H), Cortisol 8am, Prolactina</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo5"><label for="endo5" class="flex-1">Screening apnea sueño (STOP-BANG) — prevalencia 70% en obesidad</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo6"><label for="endo6" class="flex-1">Evaluación psicológica: depresión (PHQ-9), ansiedad (GAD-7), trastorno atracón (BEDS-7)</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo7"><label for="endo7" class="flex-1">Revisión medicaciones obesogénicas (corticoides, antipsicóticos, betabloqueantes, insulinoterapia, sulfonilureas, gabapentinoides, antihistamínicos)</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo8"><label for="endo8" class="flex-1">Plan personalizado: déficit calórico, proteína objetivo, ejercicio recetado, seguimiento 4-12 semanas</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo9"><label for="endo9" class="flex-1">Criterios farmacoterapia: IMC ≥30 o ≥27 + comorbilidad tras 3-6 mes estilo de vida intensivo</label></div>
+            <div class="checklist-item"><input type="checkbox" id="endo10"><label for="endo10" class="flex-1">Plan mantenimiento post-pérdida: vigilancia peso mensual, proteína alta, fuerza continua, NEAT</label></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: CONDUCTA -->
+    <section id="tab-conducta" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-conducta">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold mb-2">🧠 Módulo Conductual — Psicología de la Pérdida de Peso (TCC, ACT, Entrevista Motivacional)</h2>
+        <p class="text-sm text-gray-500">La adherencia vence a la perfección. Cambio de identidad > fuerza de voluntad.</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Hambre vs Apetito -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3 flex items-center gap-2">🍽️ Hambre Fisiológica vs Apetito Hedónico</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="card p-3 bg-green-50 border-green-200">
+              <h4 class="font-bold text-green-800 mb-2">✅ Hambre Real (Homeostática)</h4>
+              <ul class="text-sm space-y-1 text-green-700">
+                <li>• Aparece gradualmente</li>
+                <li>• Cualquier comida sacia</li>
+                <li>• Se detiene al estar lleno (leptina)</li>
+                <li>• No genera culpa</li>
+                <li>• Señales: gástrico vacío, grelina ↑, glucosa ↓</li>
+              </ul>
+            </div>
+            <div class="card p-3 bg-red-50 border-red-200">
+              <h4 class="font-bold text-red-800 mb-2">❌ Apetito Hedónico (Emocional)</h4>
+              <ul class="text-sm space-y-1 text-red-700">
+                <li>• Aparece de golpe (antojo)</li>
+                <li>• Comida específica (dulce/salado/graso)</li>
+                <li>• No cesa con saciedad (dopamina)</li>
+                <li>• Genera culpa/vergüenza</li>
+                <li>• Gatillos: estrés, aburrimiento, tristeza, ansiedad, ambiente</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-3 p-3 bg-amber-50 border-amber-200 rounded">
+            <h4 class="font-bold text-amber-800 mb-1">🛑 Test del Agua / Manzana</h4>
+            <p class="text-sm text-amber-700">¿Tienes hambre real? Bebe 500ml agua + come una manzana. Si sigues con "hambre" 20min después → real. Si pasa → hedónico/emocional.</p>
+          </div>
+        </div>
+
+        <!-- Escala Saciedad -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">📊 Escala de Saciedad (1-10) — Come en 3-7, Para en 7</h3>
+          <div class="grid grid-cols-5 gap-2">
+            <div class="card p-2 text-center bg-red-100"><div class="font-bold">1</div><div class="text-xs">Mareado/Desmayo</div></div>
+            <div class="card p-2 text-center bg-red-50"><div class="font-bold">2</div><div class="text-xs">Hambre Feroz</div></div>
+            <div class="card p-2 text-center bg-amber-100"><div class="font-bold">3</div><div class="text-xs">Hambre Claro</div></div>
+            <div class="card p-2 text-center bg-green-100"><div class="font-bold">4</div><div class="text-xs">Primeras Señales</div></div>
+            <div class="card p-2 text-center bg-green-200"><div class="font-bold">5</div><div class="text-xs">Neutro</div></div>
+            <div class="card p-2 text-center bg-green-300"><div class="font-bold">6</div><div class="text-xs">Satisfecho</div></div>
+            <div class="card p-2 text-center bg-green-400 text-white"><div class="font-bold">7 ⭐</div><div class="text-xs">Cómodo Lleno</div></div>
+            <div class="card p-2 text-center bg-amber-300"><div class="font-bold">8</div><div class="text-xs">Lleno</div></div>
+            <div class="card p-2 text-center bg-amber-400 text-white"><div class="font-bold">9</div><div class="text-xs">Muy Lleno</div></div>
+            <div class="card p-2 text-center bg-red-400 text-white"><div class="font-bold">10</div><div class="text-xs">Reventando/Dolor</div></div>
+          </div>
+          <p class="text-sm text-gray-500 mt-2 text-center">Empieza a comer en 3-4. Para en 7. Tarda 20min en llegar señal leptina al cerebro.</p>
+        </div>
+
+        <!-- Comida Consciente -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">🧘 Comida Consciente (Mindful Eating) — Protocolo 20-20-20</h3>
+          <div class="space-y-2">
+            <div class="progress-step">
+              <div class="progress-step-number">1</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">20 minutos mínimo por comida</div>
+                <div class="progress-step-desc">Pon cronómetro. El cerebro necesita 20min para registrar leptina/CCK/PYY.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">2</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">20 masticaciones por bocado</div>
+                <div class="progress-step-desc">Digestión empieza en boca. Amilasa salival. Señales saciedad anticipadas.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">3</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">20 segundos pausa entre bocados</div>
+                <div class="progress-step-desc">Deja cubiertos. Respira. Pregunta: "¿Tengo hambre real aún?"</div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 p-3 bg-blue-50 border-blue-200 rounded">
+            <h4 class="font-bold text-blue-800 mb-1">Reglas de Oro</h4>
+            <ul class="text-sm text-blue-700 space-y-1">
+              <li>• Sin pantallas (TV, móvil, trabajo) — distracción = +15-25% kcal</li>
+              <li>• Plato en mesa, no en sofá/cama/escritorio</li>
+              <li>• Agua 500ml 15min antes (glucosa ↓, saciedad ↑)</li>
+              <li>• Verduras primero (fibra → vaciado gástrico lento, glucosa ↓)</li>
+              <li>• Proteína segundo (saciedad + TEF)</li>
+              <li>• Carbohidratos último</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Gestión Emocional -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">😰 Gestión Emocional — Protocolo HALT + Surfing de Antojo</h3>
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="card p-3 bg-purple-50 border-purple-200">
+              <h4 class="font-bold text-purple-800 mb-2">HALT — Antes de Comer Pregunta:</h4>
+              <ul class="text-sm text-purple-700 space-y-1">
+                <li><strong>H</strong>ambre real? (Test agua/manzana)</li>
+                <li><strong>A</strong>nsioso/Estresado?</li>
+                <li><strong>L</strong>onely / Solo?</li>
+                <li><strong>T</strong>ired / Cansado?</li>
+              </ul>
+              <p class="text-xs text-purple-600 mt-2">Si SÍ a A/L/T → NO es hambre. Resuelve la emoción primero.</p>
+            </div>
+            <div class="card p-3 bg-blue-50 border-blue-200">
+              <h4 class="font-bold text-blue-800 mb-2">🏄 Surfing de Antojo (Urge Surfing)</h4>
+              <ol class="text-sm text-blue-700 space-y-1">
+                <li>1. Reconoce: "Tengo un antojo de X"</li>
+                <li>2. Observa: ¿Dónde lo siento? (garganta, pecho, estómago)</li>
+                <li>3. Respira: 4-7-8 ×3 ciclos</li>
+                <li>4. Visualiza: La ola sube, cresta, baja. No la luches, súbela.</li>
+                <li>5. Decide: ¿Hambre real? → Come consciente. ¿Emocional? → Acción alternativa.</li>
+              </ol>
+            </div>
+          </div>
+          <div class="card p-3 bg-green-50 border-green-200">
+            <h4 class="font-bold text-green-800 mb-2">Acciones Alternativas (Menú No-Comida)</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <button class="checklist-item"><input type="checkbox" id="alt1"><label for="alt1" class="flex-1">Caminar 10 min</label></button>
+              <button class="checklist-item"><input type="checkbox" id="alt2"><label for="alt2" class="flex-1">Llamar a alguien</label></button>
+              <button class="checklist-item"><input type="checkbox" id="alt3"><label for="alt3" class="flex-1">Respiración 4-7-8 ×5</label></button>
+              <button class="checklist-item"><input type="checkbox" id="alt4"><label for="alt4" class="flex-1">Ducharse / lavar cara</label></button>
+              <button class="checklist-item"><input type="checkbox" id="alt5"><label for="alt5" class="flex-1">Escribir 3 cosas (journaling)</label></button>
+              <button class="checklist-item"><input type="checkbox" id="alt6"><label for="alt6" class="flex-1">Estirar / movilidad 5 min</label></button>
+              <button class="checklist-item"><input type="checkbox" id="alt7"><label for="alt7" class="flex-1">Beber agua grande</label></button>
+              <button class="checklist-item"><input type="checkbox" id="alt8"><label for="alt8" class="flex-1">Música / podcast</label></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Entorno -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">🏠 Ingeniería del Entorno (Choice Architecture)</h3>
+          <div class="space-y-2">
+            <div class="progress-step">
+              <div class="progress-step-number">1</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Cocina "Invisible": Ultraprocesados fuera de vista / no comprarlos</div>
+                <div class="progress-step-desc">Fuerza de voluntad = recurso finito. Diseña para no necesitarla.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">2</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Frutas/verduras/proteínas a la vista, lavadas, listas</div>
+                <div class="progress-step-desc">Fruta en bol central. Verduras lavadas/cortadas en tupper transparente. Yogur/queso/huevos a mano.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">3</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Platos pequeños / cubiertos pequeños / vaso alto estrecho</div>
+                <div class="progress-step-desc">Delboeuf illusion: mismo alimento en plato pequeño = percibes más. Cubiertos pequeños = bocados menores.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">4</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Prepara / Batch Cooking Domingo</div>
+                <div class="progress-step-desc">Proteínas cocidas, verduras lavadas/cortadas, granos cocidos. Decisiones fatiga = elecciones malas.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">5</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Regla "Solo en Mesa, Solo en Plato"</div>
+                <div class="progress-step-desc">Nunca comer de la bolsa/recipiente. Nunca comer de pie/frente nevera/viendo TV.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sueño -->
+        <div class="card p-4 border-l-4 border-purple-500 bg-purple-50">
+          <h3 class="font-bold mb-3 flex items-center gap-2">😴 Sueño — La Base Hormonal Invisible</h3>
+          <div class="space-y-3">
+            <div class="progress-step">
+              <div class="progress-step-number">1</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">7-9 horas no negociables</div>
+                <div class="progress-step-desc"><6h → Testosterona ↓15%, Cortisol ↑, Grelina ↑ (hambre), Leptina ↓ (saciedad), Sensibilidad insulina ↓ 30%.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">2</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Higiene Circadiana Estricta</div>
+                <div class="progress-step-desc">Luz mañana 10-20min (cortisol ↑, melatonina noche ↑). Pantallas off 60-90min pre-cama (luz azul bloquea melatonina). Luz roja/ámbar noche. Temp 18-20°C. Oscuridad total.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">3</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Suplementos Apoyo (si necesarios)</div>
+                <div class="progress-step-desc">Melatonina 0.3-3mg, Magnesio glicinato 400mg, Glicina 3g, L-teanina 200mg, Ashwagandha KSM-66 600mg (cortisol ↓). Cafeína cut-off 12-14h.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">4</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Apnea del Sueño — Screen STOP-BANG</div>
+                <div class="progress-step-desc">Prevalencia 70% en obesidad. Ronquidos, pausas, somnolencia diurna → Estudio sueño (polisomnografía). CPAP → peso ↓, sensibilidad insulina ↑, testosterona ↑.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estrés / Cortisol -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">🧘 Estrés & Cortisol — El Saboteador Silencioso</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="card p-3 bg-red-50 border-red-200">
+              <h4 class="font-bold text-red-800 mb-2">Cortisol Crónicamente Alto =</h4>
+              <ul class="text-sm text-red-700 space-y-1">
+                <li>• Glucosa ↑ (gluconeogénesis hepática)</li>
+                <li>• Insulina ↑ → almacenamiento grasa visceral</li>
+                <li>• Catabolismo muscular (proteólisis)</li>
+                <li>• Supresión testosterona / GH / IGF-1</li>
+                <li>• Apetito hedónico ↑ (comfort food)</li>
+                <li>• Sueño fragmentado → ciclo vicioso</li>
+              </ul>
+            </div>
+            <div class="card p-3 bg-green-50 border-green-200">
+              <h4 class="font-bold text-green-800 mb-2">Herramientas Basadas en Evidencia</h4>
+              <ul class="text-sm text-green-700 space-y-1">
+                <li>• Respiración 4-7-8 / Box breathing (4-4-4-4) — vagal tone ↑</li>
+                <li>• Meditación 10min/día (Headspace, Waking Up, Insight Timer)</li>
+                <li>• Ashwagandha KSM-66 600mg (cortisol ↓ 27%)</li>
+                <li>• Rhodiola rosea 200-400mg (fatiga, burnout)</li>
+                <li>• Fosfatidilserina 400-800mg (cortisol post-entreno)</li>
+                <li>• Naturaleza 20min/día (forest bathing — cortisol ↓ 15%)</li>
+                <li>• Journaling 5min noche (brain dump)</li>
+                <li>• Límites: trabajo, redes, noticias</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Identidad -->
+        <div class="card p-4 border-l-4 border-blue-500 bg-blue-50">
+          <h3 class="font-bold mb-3">🆔 Cambio de Identidad — "Soy alguien que..."</h3>
+          <p class="text-sm text-blue-700 mb-3">Los hábitos basados en identidad > metas basadas en resultados. James Clear / Atomic Habits.</p>
+          <div class="space-y-2">
+            <div class="checklist-item"><input type="checkbox" id="id1"><label for="id1" class="flex-1">"Soy alguien que entrena 3-4x/semana" (vs "quiero perder 10kg")</label></div>
+            <div class="checklist-item"><input type="checkbox" id="id2"><label for="id2" class="flex-1">"Soy alguien que come proteína en cada comida"</label></div>
+            <div class="checklist-item"><input type="checkbox" id="id3"><label for="id3" class="flex-1">"Soy alguien que prioriza su sueño"</label></div>
+            <div class="checklist-item"><input type="checkbox" id="id4"><label for="id4" class="flex-1">"Soy alguien que gestiona su estrés activamente"</label></div>
+            <div class="checklist-item"><input type="checkbox" id="id5"><label for="id5" class="flex-1">"Soy alguien que se hidrata bien"</label></div>
+            <div class="checklist-item"><input type="checkbox" id="id6"><label for="id6" class="flex-1">"Soy alguien que camina después de comer"</label></div>
+          </div>
+          <p class="text-xs text-blue-600 mt-2">Cada vez que actúas acorde, votas por esa identidad. Pequeños votos = gran cambio.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: MEXICANO -->
+    <section id="tab-mexicano" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-mexicano">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold mb-2">🇲🇽 Tradición Mexicana & Dieta Milpa — Evidencia Científica + Cultura Ancestral</h2>
+        <p class="text-sm text-gray-500">Basado en: Definición Dieta Tradicional Mexicana (Valerino-Perea 2019, 139 citas), INSP, ISSSTE, IMSS, fenólicos Alatorre-Cruz 2023.</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Dieta Milpa -->
+        <div class="card p-4 border-l-4 border-green-500 bg-green-50">
+          <h3 class="font-bold mb-3 flex items-center gap-2">🌽 La Milpa — Sistema Agrícola y Alimentario Ancestral</h3>
+          <p class="text-sm text-green-700 mb-3">La milpa es un policultivo: maíz + frijol + calabaza + chile + quelites. Intercrop que maximiza nutrientes, biodiversidad y sostenibilidad.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="card p-3 bg-white border-green-200">
+              <div class="font-bold text-green-800">🌽 Maíz Nixtamalizado</div>
+              <div class="text-xs text-green-700 mt-1">Ca biodisponible ↑, niacina libre, fibra, bajo IG tortilla vs harina</div>
+            </div>
+            <div class="card p-3 bg-white border-green-200">
+              <div class="font-bold text-green-800">🫘 Frijol (negro, bayo, pinto, ayocote)</div>
+              <div class="text-xs text-green-700 mt-1">Proteína + lisina, fibra, almidón resistente, polifenoles, bajo IG</div>
+            </div>
+            <div class="card p-3 bg-white border-green-200">
+              <div class="font-bold text-green-800">🎃 Calabaza / Calabacita</div>
+              <div class="text-xs text-green-700 mt-1">β-caroteno, vit C, potasio, fibra, semillas (Zn, Mg, fitosteroles)</div>
+            </div>
+            <div class="card p-3 bg-white border-green-200">
+              <div class="font-bold text-green-800">🌶️ Chile (serrano, jalapeño, poblano, habanero, árbol)</div>
+              <div class="text-xs text-green-700 mt-1">Capsaicina termogénica, vit C > naranja, capsaicinoides antiinflamatorios</div>
+            </div>
+            <div class="card p-3 bg-white border-green-200">
+              <div class="font-bold text-green-800">🌿 Quelites (quelite, quintonil, epazote, hoja santa, cilantro, papalo)</div>
+              <div class="text-xs text-green-700 mt-1">Quercetina, vit K, folatos, calcio, fitoquímicos, cultura ancestral</div>
+            </div>
+            <div class="card p-3 bg-white border-green-200">
+              <div class="font-bold text-green-800">🥑 Aguacate</div>
+              <div class="text-xs text-green-700 mt-1">MUFA oleico, fibra 6.7g, absorción carotenoides ↑ 5x, saciedad extrema</div>
+            </div>
+            <div class="card p-3 bg-white border-green-200">
+              <div class="font-bold text-green-800">🍅 Jitomate / Tomate verde</div>
+              <div class="text-xs text-green-700 mt-1">Licopeno (cocinado ↑ 4x), vit C, potasio, bajo calórico</div>
+            </div>
+            <div class="card p-3 bg-white border-green-200">
+              <div class="font-bold text-green-800">🌽 Maíz + Frijol = Proteína Completa</div>
+              <div class="text-xs text-green-700 mt-1">Lisina (frijol) + Metionina (maíz) = PDCAAS 1.0. Base dieta milpa ancestral.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Platillos Saludables Tradicionales -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">🍽️ Platillos Tradicionales Adaptados para Recomposición (ISSSTE/IMSS/INSP)</h3>
+          <div class="space-y-3">
+            <div class="card p-3 bg-green-50 border-green-200">
+              <h4 class="font-bold text-green-800">🌮 Tostadas de Tinga de Pollo (versión saludable)</h4>
+              <div class="text-sm text-green-700 mt-1"><strong>Base:</strong> Tostada horneada (no frita) maíz nixtamalizado. <strong>Proteína:</strong> Pechuga deshebrada + chipotle + jitomate + cebolla. <strong>Topping:</strong> Lechuga, crema light/griego 0%, queso fresco, aguacate ¼. <strong>Macros ~:</strong> 350 kcal | 35g P | 12g G | 30g C | 6g F.</div>
+            </div>
+            <div class="card p-3 bg-blue-50 border-blue-200">
+              <h4 class="font-bold text-blue-800">🍲 Pozole Blanco/Roja (versión magra)</h4>
+              <div class="text-sm text-blue-700 mt-1"><strong>Base:</strong> Maíz pozolero (nixtamalizado) + pechuga deshebrada (no cachete/pierna). <strong>Caldo:</strong> Desgrasado. <strong>Topping:</strong> Lechuga/col, rábanos, orégano, limón, tostadas horneadas. <strong>Evita:</strong> Crema, chicharrón, tostadas fritas. <strong>Macros ~:</strong> 400 kcal | 40g P | 8g G | 45g C | 5g F.</div>
+            </div>
+            <div class="card p-3 bg-purple-50 border-purple-200">
+              <h4 class="font-bold text-purple-800">🌮 Tacos de Pescado / Camarón Estilo Baja (saludable)</h4>
+              <div class="text-sm text-purple-700 mt-1"><strong>Tortilla:</strong> Maíz nixtamalizado (1-2). <strong>Proteína:</strong> Pescado blanco / camarón a la plancha (no capeado/frito). <strong>Salsa:</strong> Yogur griego 0% + chipotle + limón + cilantro. <strong>Repollo:</strong> Finamente picado. <strong>Macros ~:</strong> 300 kcal | 35g P | 6g G | 25g C | 4g F.</div>
+            </div>
+            <div class="card p-3 bg-amber-50 border-amber-200">
+              <h4 class="font-bold text-amber-800">🥗 Ensalada de Nopales + Quelites + Frijol</h4>
+              <div class="text-sm text-amber-700 mt-1"><strong>Base:</strong> Nopales asados/hervidos + quelites (quelite/espinaca) + frijol negro. <strong>Vinagreta:</strong> AOVE + limón + comino + orégano. <strong>Proteína opcional:</strong> Queso panela / pollo / huevo poché. <strong>Macros ~:</strong> 350 kcal | 25g P | 12g G | 40g C | 12g F.</div>
+            </div>
+            <div class="card p-3 bg-red-50 border-red-200">
+              <h4 class="font-bold text-red-800">🍲 Caldo Tlalpeño / Caldo de Res (versión ligera)</h4>
+              <div class="text-sm text-red-700 mt-1"><strong>Base:</strong> Caldo desgrasado (enfriar → retirar grasa). <strong>Proteína:</strong> Pechuga pollo / chambarete magro. <strong>Verduras:</strong> Zanahoria, calabacita, ejote, garbanzo, arroz integral. <strong>Topping:</strong> Limón, orégano, chile serrano, aguacate ¼. <strong>Macros ~:</strong> 300 kcal | 35g P | 6g G | 30g C | 5g F.</div>
+            </div>
+            <div class="card p-3 bg-green-50 border-green-200">
+              <h4 class="font-bold text-green-800">🍳 Chilaquiles Verdes/Rojos (versión fit)</h4>
+              <div class="text-sm text-green-700 mt-1"><strong>Tortilla:</strong> Horneada/air fryer (no frita). <strong>Salsa:</strong> Tomate verde/tomate + chile + cebolla + ajo (licuada, sin freír). <strong>Proteína:</strong> 2 huevos poché / pollo deshebrado. <strong>Topping:</strong> Yogur griego 0% (sustituye crema), queso panela, cebolla, aguacate ¼. <strong>Macros ~:</strong> 400 kcal | 35g P | 14g G | 35g C | 6g F.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fenólicos / Antioxidantes -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">🔬 Compuestos Bioactivos Mexicanos (Alatorre-Cruz 2023, Foods 12:1233)</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-gray-500 border-b border-gray-200">
+                  <th class="pb-2">Compuesto</th>
+                  <th class="pb-2">Fuente Mexicana</th>
+                  <th class="pb-2">Evidencia Obesidad/Metabólica</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr><td class="py-2 font-medium">Antocianinas</td><td class="py-2">Maíz azul/púrpura, frijol negro, mora, zarzamora</td><td class="py-2">AMPK ↑, adipogénesis ↓, sensibilidad insulina ↑, inflamación ↓</td></tr>
+                <tr><td class="py-2 font-medium">Quercetina</td><td class="py-2">Quelites, cebolla, chile, manzana, capulín</td><td class="py-2">AMPK/SIRT1 ↑, lipólisis ↑, adipocitos ↓, antiinflamatorio</td></tr>
+                <tr><td class="py-2 font-medium">Capsaicina / Capsinoides</td><td class="py-2">Chile serrano, jalapeño, habanero, piquín</td><td class="py-2">TRPV1 → termogénesis ↑ 50-100 kcal/día, oxidación grasa ↑, saciedad ↑</td></tr>
+                <tr><td class="py-2 font-medium">Ácido Clorogénico</td><td class="py-2">Café mexicano, nopal, quelites</td><td class="py-2">Glucosa postprandial ↓, absorción glucosa intestinal ↓, AMPK ↑</td></tr>
+                <tr><td class="py-2 font-medium">Betalaínas</td><td class="py-2">Nopal (tuna roja), betabel</td><td class="py-2">Antioxidante potente, NF-κB ↓, sensibilidad insulina ↑, hepatoprotector</td></tr>
+                <tr><td class="py-2 font-medium">Lignanos</td><td class="py-2">Linaza, chía, quelites, frijol</td><td class="py-2">Fitoestrógenos, SHBG ↑, testosterona libre ↑, adiposidad ↓</td></tr>
+                <tr><td class="py-2 font-medium">Esqualeno</td><td class="py-2">Amaranto, AOVE, aceite aguacate</td><td class="py-2">Antioxidante, cardioprotector, posible antitumoral, piel</td></tr>
+                <tr><td class="py-2 font-medium">Fitoesteroles</td><td class="py-2">Aguacate, semillas calabaza, pistache, amaranto</td><td class="py-2">Colesterol LDL ↓ 10-15%, competen absorción colesterol intestinal</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Guía Práctica Diaria -->
+        <div class="card p-4 bg-amber-50 border-amber-200">
+          <h3 class="font-bold mb-3">📋 Guía Práctica Diaria — Estilo Milpa Moderno</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="card p-3 bg-white border-amber-200">
+              <h4 class="font-bold text-amber-800 mb-2">🌅 Desayuno</h4>
+              <ul class="text-sm text-amber-700 space-y-1">
+                <li>• Huevos (2-3) + nopales + salsa + tortilla maíz (1-2)</li>
+                <li>• Chilaquiles fit (horneados) + pollo + yogur griego</li>
+                <li>• Avena + chía + frutos rojos + almendras</li>
+                <li>• Quesadilla: tortilla maíz + queso panela + flor calabaza + frijol</li>
+              </ul>
+            </div>
+            <div class="card p-3 bg-white border-amber-200">
+              <h4 class="font-bold text-amber-800 mb-2">☀️ Comida</h4>
+              <ul class="text-sm text-amber-700 space-y-1">
+                <li>• Pozole magro + tostada horneada + aguacate</li>
+                <li>• Tostadas tinga pollo + ensalada nopales</li>
+                <li>• Pescado a la veracruzana + arroz integral + ensalada</li>
+                <li>• Caldo tlalpeño + pollo + verduras + tortilla</li>
+              </ul>
+            </div>
+            <div class="card p-3 bg-white border-amber-200">
+              <h4 class="font-bold text-amber-800 mb-2">🌙 Cena</h4>
+              <ul class="text-sm text-amber-700 space-y-1">
+                <li>• Tacos pescado/camarón plancha + repollo + yogur chipotle</li>
+                <li>• Ensalada quelites + frijol + queso panela + aguacate</li>
+                <li>• Caldo tlalpeño ligero + pechuga + verduras</li>
+                <li>• Chilaquiles fit (horneados) + huevo poché + yogur griego</li>
+              </ul>
+            </div>
+            <div class="card p-3 bg-white border-amber-200">
+              <h4 class="font-bold text-amber-800 mb-2">🍎 Colaciones</h4>
+              <ul class="text-sm text-amber-700 space-y-1">
+                <li>• Fruta de temporada (1 pza) + 10 almendras</li>
+                <li>• Yogur griego 0% + chía + frutos rojos</li>
+                <li>• Pepino/jícama + chile piquín + limón</li>
+                <li>• Queso panela + chile toreado</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: TRACKING -->
+    <section id="tab-tracking" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-tracking">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold mb-2">📈 Tracking Avanzado — Datos para Decisiones, No Obsesión</h2>
+        <p class="text-sm text-gray-500">Lo que se mide se gestiona. Métricas correctas, frecuencia adecuada.</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Métricas Clave -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">🎯 Métricas Jerárquicas (Orden de Importancia)</h3>
+          <div class="space-y-3">
+            <div class="progress-step">
+              <div class="progress-step-number">1</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Adherencia (Semanal)</div>
+                <div class="progress-step-desc">% comidas según plan, % entrenos completados, % sueño 7-9h, % pasos 8k+. Meta: >85%.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">2</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Tendencia Peso (7-14 días)</div>
+                <div class="progress-step-desc">Promedio móvil 7d. Ignora fluctuaciones diarias (±1-2kg agua/glucógeno/heces). Meta: -0.5 a -1% peso/sem.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">3</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Circunferencias (Quincenal)</div>
+                <div class="progress-step-desc">Cintura (umbilical), cadera (mayor glúteo), muslo, brazo. Cintura ↓ = grasa visceral ↓ = salud ↑.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">4</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Fotos Estándar (Mensual)</div>
+                <div class="progress-step-desc">Mismo lugar, luz, ropa, hora, poses (frente, lado, espalda). Detecta recomposición que peso no ve.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">5</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Rendimiento Gimnasio (Semanal)</div>
+                <div class="progress-step-desc">Cargas, repes, RPE. Si suben en déficit → recomposición exitosa. Si bajan consistentemente → ajustar.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">6</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Biofeedback (Diario)</div>
+                <div class="progress-step-desc">Sueño (1-10), energía (1-10), hambre (1-10), estrés (1-10), digestión (1-10), libido (1-10). Patrones > valores absolutos.</div>
+              </div>
+            </div>
+            <div class="progress-step">
+              <div class="progress-step-number">7</div>
+              <div class="progress-step-content">
+                <div class="progress-step-title">Labs (Cada 3-6 meses)</div>
+                <div class="progress-step-desc">Ver panel médico. Tendencias > valores puntuales.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pesaje Correcto -->
+        <div class="card p-4 bg-blue-50 border-blue-200">
+          <h3 class="font-bold mb-3">⚖️ Protocolo Pesaje Correcto (Elimina Ruido)</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="card p-3 bg-white border-blue-200">
+              <h4 class="font-bold text-blue-800 mb-2">✅ HAZLO</h4>
+              <ul class="text-sm text-blue-700 space-y-1">
+                <li>• Mismo día/semana (ej. Miércoles/Sábado)</li>
+                <li>• Mañana, tras orinar, antes comer/beber</li>
+                <li>• Desnudo o ropa interior misma ropa interior consistente</li>
+                <li>• Misma báscula, misma ubicación, suelo duro</li>
+                <li>• Registra promedio semanal (7 días) / quincenal</li>
+                <li>• Mujeres: misma fase ciclo menstrual (fase folicular)</li>
+              </ul>
+            </div>
+            <div class="card p-3 bg-white border-red-200">
+              <h4 class="font-bold text-red-800 mb-2">❌ NO HAGAS</h4>
+              <ul class="text-sm text-red-700 space-y-1">
+                <li>• Pesarte diario y reaccionar al número</li>
+                <li>• Post-entreno (deshidratación) / post-comida</li>
+                <li>• Distinta báscula / alfombra / ropa distinta</li>
+                <li>• Fase lútea (retención 1-3kg agua)</li>
+                <li>• Post-día alto sodio/carbohidrato (glucógeno + agua)</li>
+                <li>• Dejar que el número dicte tu día</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export/Import Data -->
+        <div class="card p-4">
+          <h3 class="font-bold mb-3">📤 Exportar / Importar Datos Completos</h3>
+          <div class="flex flex-wrap gap-2">
+            <button class="btn btn-secondary" id="btnExportFull">📤 Exportar TODO (JSON)</button>
+            <button class="btn btn-secondary" id="btnImportFull">📥 Importar Backup</button>
+            <input type="file" id="importFullFile" accept=".json" class="hidden">
+          </div>
+          <p class="text-sm text-gray-500 mt-2">Incluye: alimentos, registros, pesos, objetivos, checklists, preferencias. Backup mensual recomendado.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: AJUSTES -->
+    <section id="tab-ajustes" class="tab-content hidden" role="tabpanel" aria-labelledby="tab-ajustes">
+      <div class="space-y-4">
+        <div class="card p-4">
+          <h3 class="font-bold mb-4">🎯 Objetivos Diarios Personalizados</h3>
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div>
+              <label class="block text-sm text-gray-500 mb-1">Calorías objetivo</label>
+              <input type="number" id="objCalorias" class="input" value="1800" min="1000" max="4000" step="50">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-500 mb-1">Proteína (g)</label>
+              <input type="number" id="objProteina" class="input" value="135" min="50" max="300" step="5">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-500 mb-1">Carbohidratos (g)</label>
+              <input type="number" id="objCarbs" class="input" value="180" min="50" max="400" step="10">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-500 mb-1">Grasa (g)</label>
+              <input type="number" id="objGrasa" class="input" value="60" min="30" max="150" step="5">
+            </div>
+          </div>
+          <button class="btn btn-primary w-full" id="btnGuardarObjetivos">Guardar objetivos</button>
+        </div>
+
+        <div class="card p-4">
+          <h3 class="font-bold mb-4">💾 Datos y Respaldo</h3>
+          <div class="space-y-2">
+            <button class="btn btn-secondary w-full justify-start" id="btnExportar">📤 Exportar datos (JSON)</button>
+            <button class="btn btn-secondary w-full justify-start" id="btnImportar">📥 Importar datos</button>
+            <input type="file" id="importFile" accept=".json" class="hidden">
+            <button class="btn btn-danger w-full justify-start" id="btnBorrarTodo">🗑️ Borrar TODO</button>
+          </div>
+        </div>
+
+        <div class="card p-4">
+          <h3 class="font-bold mb-4">ℹ️ Información</h3>
+          <div class="text-sm text-gray-600 space-y-1">
+            <p><strong>NutriMX v2.0</strong> — Sistema Integral de Recomposición Corporal Basado en Evidencia</p>
+            <p>Basado en: Guías AACE/ACE 2023-2025, ACSM, NSCA, ISSN, Cochrane, ADA, EASO, IMSS, ISSSTE, INSP</p>
+            <p>100+ alimentos con evidencia • Protocolos ejercicio ACSM/NSCA • Suplementos Grado A/B (ISSN/Examine)</p>
+            <p>Módulo médico AACE/ACE • Conducta TCC/ACT • Tradición Milpa Mexicana (Valerino-Perea 2019, INSP)</p>
+            <p>Desarrollado por Cervereta con ayuda de Julieta (IA) · D&F Atelier</p>
+            <p class="pt-2 border-t">Funciona 100% offline · PWA instalable · Datos en tu dispositivo · Cero dependencias externas críticas</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Añadir Alimento -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="p-4 border-b flex items-center justify-between sticky top-0 bg-white bg-opacity-95 backdrop-blur z-10">
+        <h3 class="font-bold" id="modalTitle">Añadir a <span id="modalMeal"></span></h3>
+        <button class="text-2xl text-gray-400" id="modalClose" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="p-4">
+        <label class="block text-sm text-gray-500 mb-1">Buscar alimento</label>
+        <input type="search" id="modalSearch" class="input mb-4" placeholder="Ej: pechuga pollo, nopal, tortilla...">
+        <div id="modalResults" class="space-y-2 max-h-64 overflow-y-auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toastContainer" aria-live="polite"></div>
+
+  <!-- Install banner -->
+  <div class="install-banner hidden" id="installBanner" role="dialog">
+    <div class="flex items-start gap-3">
+      <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
+        <span class="text-xl">🧬</span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold">Instala NutriMX v2.0</p>
+        <p class="text-sm text-gray-500 mt-0.5">Funciona offline, acceso rápido, notificaciones, tracking completo</p>
+      </div>
+      <div class="flex gap-2 flex-shrink-0">
+        <button class="btn btn-primary text-sm px-3 py-2" id="installAccept">Instalar</button>
+        <button class="btn btn-secondary text-sm px-3 py-2" id="installDismiss">Luego</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { NutriApp } from './app.js';
+    window.nutriApp = new NutriApp();
+    window.nutriApp.init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+[build]
+  base = "."
+  publish = "."
+
+[functions]
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Configurar para que no pida password en deploys anónimos
+[build.environment]
+  NETLIFY_SKIP_PASSWORD_PROTECTION = "true"

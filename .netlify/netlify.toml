@@ -1,0 +1,36 @@
+headersOrigin = "config"
+plugins = []
+redirects = []
+
+[functions]
+
+[functions."*"]
+node_bundler = "esbuild"
+
+[build]
+publish = "C:\\Users\\jesus\\Downloads\\ACUARELAS HERMES\\nutricion_app"
+publishOrigin = "config"
+base = "C:\\Users\\jesus\\Downloads\\ACUARELAS HERMES\\nutricion_app"
+
+[build.environment]
+NETLIFY_SKIP_PASSWORD_PROTECTION = "true"
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
