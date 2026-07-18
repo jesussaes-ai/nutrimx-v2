@@ -1,0 +1,237 @@
+====================================================================
+NUTRIMX v3.6 — PROMPT MAESTRO / ESPECIFICACIÓN COMPLETA
+App de nutrición, ejercicio y salud basada en evidencia (México)
+URL producción: https://nutrimx.netlify.app
+====================================================================
+
+--------------------------------------------------------------------
+0) OBJETIVO / VISIÓN
+--------------------------------------------------------------------
+Construye "NutriMX": una aplicación web progresiva (PWA) de nutrición,
+ejercicio y salud, basada en evidencia científica (OMS, ACSM, ISSN,
+AACE, Cochrane), personalizada para cada persona según su cuerpo y su
+salud. Debe servir a HOMBRES, MUJERES, NIÑOS y ADULTOS MAYORES, cada
+uno con recomendaciones propias. El objetivo es que la gente coma
+mejor, se mueva más y viva más fuerte, con un plan hecho a su medida.
+Enfoque cálido, en español mexicano. NUNCA da diagnóstico ni consejo
+médico: es educativa y de autocuidado, y siempre remite al médico.
+
+--------------------------------------------------------------------
+1) STACK TÉCNICO
+--------------------------------------------------------------------
+- Frontend: HTML + CSS + JavaScript vanilla (modular por archivos),
+  Tailwind por CDN. PWA instalable, offline-first (Service Worker).
+- Backend: Supabase (Postgres + Auth + Storage + Edge Functions).
+- IA: proveedor CONFIGURABLE (Anthropic u OpenRouter) vía variables de
+  entorno; el usuario elige el modelo desde Ajustes.
+- Hosting: Netlify con auto-deploy desde GitHub (cada push publica).
+- Repo: GitHub (jesussaes-ai/nutrimx-v2), rama main.
+
+--------------------------------------------------------------------
+2) ACCESO Y REGISTRO (puerta de entrada)
+--------------------------------------------------------------------
+- La PORTADA es la puerta: animación con emojis de comida/ejercicio,
+  logo, y dos botones: "Crear mi cuenta" y "Ya tengo cuenta · Entrar".
+- El dashboard SOLO se muestra si: (1) hay sesión iniciada Y (2) el
+  registro está completo (evaluación inicial con análisis).
+- Registro con email + contraseña (mín. 8). Confirmación de correo
+  DESACTIVADA en Supabase (acceso inmediato tras registrarse).
+- Casilla OBLIGATORIA "He leído y acepto el Aviso de Privacidad" al
+  crear cuenta: aceptar entrar = aceptar las condiciones.
+- Si un usuario con sesión no completó su evaluación, se le fuerza a
+  terminarla antes de entrar (no se puede cerrar sin completar; cerrar
+  = cerrar sesión).
+
+--------------------------------------------------------------------
+3) EVALUACIÓN INICIAL (tipo PAR-Q+) — al registrarse
+--------------------------------------------------------------------
+Wizard de 3 pasos, OBLIGATORIO para acceder:
+  Paso 1 (datos): foto de perfil (opcional), sexo, edad, peso,
+    estatura, nivel de actividad, objetivo (perder/mantener/ganar).
+  Paso 2 (salud): tamizaje — diabetes, hipertensión, cardiaco, dolor
+    de pecho, mareos, fractura/lesión, cirugía reciente, embarazo,
+    medicamentos, dolor articular + notas.
+  Paso 3 (consentimiento): aceptar Aviso de Privacidad y consentir
+    EXPRESAMENTE el tratamiento de datos de salud (datos sensibles).
+Motor de análisis calcula:
+  - IMC y categoría; TMB (Mifflin-St Jeor); TDEE; calorías objetivo
+    (déficit 20% para perder, +8% para ganar, mínimos de seguridad);
+    proteína objetivo (1.6–2.0 g/kg; 1.6 en 60+).
+  - Perfil sugerido (hombre/mujer/niños/mayores) y modalidad segura
+    (completa/bajo_impacto/silla_cama/suave) según condiciones.
+  - Banderas rojas (dolor pecho, cardiaco, mareos, cirugía) → "consulta
+    médico antes de entrenar".
+  - Recomendaciones y precauciones específicas por condición.
+Aplica automáticamente calorías/proteína a los objetivos de la app.
+Botón ARCO "Borrar mis datos" (revoca consentimiento).
+
+--------------------------------------------------------------------
+4) FOTO DE PERFIL / AVATAR
+--------------------------------------------------------------------
+En el registro y en Ajustes. Tres opciones (opcional):
+  - Tomar foto con la cámara (Web getUserMedia, recorte 256px).
+  - Subir una imagen.
+  - Elegir 1 de 18 avatares prediseñados (emoji sobre color).
+Se guarda reducida en localStorage + profiles.avatar. Solo el propio
+usuario la ve; no se usa fuera del perfil.
+
+--------------------------------------------------------------------
+5) DASHBOARD
+--------------------------------------------------------------------
+- Anillo de calorías del día vs objetivo; barras de proteína, carbos,
+  grasa; fibra; vasos de agua (meta 8).
+- Distribución por comida (desayuno/comida/cena/colación).
+- RUTINAS DE SALUD DIARIAS (panel): sueño (horas, meta 7–9),
+  pasos (meta 8,000), relajación/meditación (min), ánimo/energía
+  (5 emojis), y checklist de hábitos saludables (dormir, moverse,
+  agua, verduras, sol/vit D, evitar ultraprocesados, estirar, cortar
+  pantallas). Se guarda por día y sincroniza a la nube.
+
+--------------------------------------------------------------------
+6) NUTRICIÓN
+--------------------------------------------------------------------
+- Base de 151+ alimentos con macros y evidencia (48 antiinflamatorios
+  etiquetados). Incluye proteínas magras y omega-3, crucíferas y
+  hojas, bayas, frutas enzimáticas (piña/bromelina, papaya/papaína),
+  cítricos, semillas (chía, linaza), frutos secos, cereales integrales,
+  especias (cúrcuma, jengibre, canela), té verde, kéfir, etc.
+  IMPORTANTE: si se agregan alimentos, invalidar el caché local por
+  conteo para que todos reciban los nuevos automáticamente.
+- Búsqueda inteligente: tolera PLURALES y ACENTOS (coincidencia
+  bidireccional por palabra + normalización sin acentos).
+- Al agregar un alimento, SELECTOR de comida (desayuno/comida/cena/
+  colación) + gramos.
+- "TU PLAN DEL DÍA": menú sugerido con alimentos reales ajustado a las
+  calorías y proteína del usuario, distribuido 25/35/25/15. Botones
+  "Cargar este menú a mi registro" y "Otra variante".
+- Registro del día por comida, editable.
+- FOTO DE COMIDA CON IA: el usuario sube foto y la IA identifica los
+  alimentos y estima gramos, calorías y macros; se agregan al registro
+  con un toque. La foto se guarda en su cuenta (bucket privado).
+
+--------------------------------------------------------------------
+7) EJERCICIO Y "PARA TI" (por perfil)
+--------------------------------------------------------------------
+Perfiles: Hombre, Mujer, Niños, Adultos mayores. Cada uno con:
+  - Ejercicio: rutinas por nivel + nota basada en guías. Videoteca
+    amplia de YouTube (embeds oficiales): ~18 hombre, ~18 mujer,
+    ~14 niños, ~13 mayores. Los videos ROTAN por día en el plan.
+  - Alimentación: puntos clave + menú ejemplo mexicano.
+  - Suplementos con grado de evidencia A/B/C. (Niños: SIN suplementos
+    ni dietas restrictivas; solo hábitos y juego activo.)
+REGLA CLAVE (ejercicio con ELECCIÓN LIBRE): la app DA LA RECOMENDACIÓN
+primero (según perfil/modalidad) y LUEGO el usuario ELIGE su modalidad
+con botones (en silla / a ras de piso / en cama / equilibrio / de pie
+más activa). La recomendada va marcada; default = recomendada; la
+elección se guarda. Para perfiles restringidos se ofrece "Fuerza de
+pie (más activa)" con aviso médico — los adultos mayores NO quedan
+limitados a la silla.
+Adultos mayores: rutinas en silla, piso, cama y equilibrio anticaídas;
+proteína 1.2–2.0 g/kg (PROT-AGE); advertencia de interacciones.
+
+--------------------------------------------------------------------
+8) SUPLEMENTOS + VIDEOS DE RECOMENDACIONES MÉDICAS
+--------------------------------------------------------------------
+- Pestaña con suplementación basada en evidencia (ISSN/Cochrane) por
+  grado A/B/C.
+- Sección "Recomendaciones en video": médicos y nutriólogos sobre
+  suplementos y alimentos antiinflamatorios (embeds de YouTube).
+- Los videos se REORDENAN CADA MES según el interés real: se lleva
+  ESTADÍSTICA de clics por video/mes (tabla video_stats en Supabase,
+  función registrar_click_video). Los más vistos del mes suben al
+  inicio y el top se marca "🔥 Top del mes". El contenido debe poder
+  cambiarse periódicamente según lo que genere más interés.
+
+--------------------------------------------------------------------
+9) ASISTENTE DE IA (NutriCoach)
+--------------------------------------------------------------------
+Chat flotante. Responde: (a) dudas de USO DE LA APP (navegación y
+funciones) y (b) nutrición/ejercicio basado en evidencia. Usa el
+contexto del usuario (edad, IMC, condiciones) para personalizar.
+NUNCA da diagnóstico ni consejo médico; remite al médico. No pide
+datos sensibles ni contraseñas. Modelo/proveedor configurables.
+
+--------------------------------------------------------------------
+10) TRACKING + BÁSCULA BLUETOOTH
+--------------------------------------------------------------------
+- Peso corporal: registro manual, IMC con estatura real, tendencia de
+  7 días, historial.
+- BÁSCULA BLUETOOTH (Web Bluetooth): conecta básculas con los servicios
+  GATT estándar (Weight Scale 0x181D / Body Composition 0x181B) y lee
+  peso, % grasa, músculo, agua. Calcula EDAD FISIOLÓGICA/METABÓLICA
+  estimada a partir de peso, IMC (y % grasa si está disponible).
+  Limitaciones: funciona en Chrome/Edge (Android y PC), NO en iPhone;
+  solo básculas compatibles con GATT. Fallback: registro manual.
+
+--------------------------------------------------------------------
+11) AYUDA Y GLOSARIO
+--------------------------------------------------------------------
+- Botón flotante "?" siempre visible.
+- Preguntas frecuentes de cómo usar la app.
+- GLOSARIO de siglas y términos, con buscador, agrupado en:
+  Instituciones (OMS, ACSM, NSCA, ISSN, AACE/ACE, AAP, ACOG, Cochrane,
+  INAI), Nutrición (kcal, macros, TMB, TDEE, IMC, IG, TEF, déficit/
+  superávit, recomposición, antiinflamatorio, omega-3, nixtamalizado,
+  prebiótico/probiótico, sarcopenia, RED-S), Ejercicio (PAR-Q, NEAT,
+  HIIT, RPE, series×reps, sobrecarga progresiva, bajo impacto) y
+  Privacidad/App (LFPDPPP, GDPR, ARCO, datos sensibles, RLS, PWA, IA).
+- Botón "Preguntar al asistente".
+
+--------------------------------------------------------------------
+12) OTRAS PESTAÑAS
+--------------------------------------------------------------------
+Médico (guías AACE/ACE, criterios, labs), Conducta (TCC/ACT, hábitos),
+México (dieta milpa, platillos adaptados), Ajustes (objetivos diarios,
+modelo de IA, foto de perfil, exportar/importar/borrar datos).
+
+--------------------------------------------------------------------
+13) MODELO DE DATOS (Supabase)
+--------------------------------------------------------------------
+Tablas (RLS por usuario — cada quien solo ve lo suyo):
+  - profiles(id, nombre, objetivos jsonb, datos jsonb, consentimientos
+    jsonb, modelo text, avatar text)
+  - dias(user_id, fecha, data jsonb, salud jsonb)  [registro y salud]
+  - pesos(user_id, fecha, peso)
+  - fotos(user_id, fecha, comida, path, analisis jsonb)  [+bucket privado 'fotos']
+  - video_stats(video_id, mes, seccion, titulo, clicks) [público lectura]
+Edge Functions:
+  - analizar-comida: analiza foto → alimentos+calorías (proveedor/modelo
+    configurable, lista blanca de modelos).
+  - asistente: chat NutriCoach (mismo esquema de proveedor/modelo).
+Secrets: LLM_PROVIDER (anthropic|openrouter), LLM_MODEL,
+  ANTHROPIC_API_KEY u OPENROUTER_API_KEY. Confirm email = OFF.
+
+--------------------------------------------------------------------
+14) PRIVACIDAD Y SEGURIDAD
+--------------------------------------------------------------------
+- Aviso de Privacidad completo (LFPDPPP México + GDPR): responsable,
+  datos sensibles, finalidades, derechos ARCO, INAI, encargados
+  (Supabase/Anthropic/Netlify), conservación, menores.
+- Consentimiento expreso para datos de salud. Derechos ARCO desde la
+  app (borrar datos). Cifrado en tránsito, contraseñas con hash,
+  aislamiento por usuario (RLS), fotos en bucket privado.
+- La imagen/datos del usuario solo viven en SU perfil.
+
+--------------------------------------------------------------------
+15) REGLAS DE PRODUCTO (obligatorias)
+--------------------------------------------------------------------
+- Español mexicano, cálido y claro. Basado en evidencia.
+- NUNCA diagnóstico ni tratamiento médico; siempre remitir al médico.
+- Niños: sin dietas restrictivas ni suplementos.
+- Adultos mayores: fuerza, proteína, equilibrio y prevención de caídas.
+- Videos: SOLO embeds oficiales de YouTube (youtube-nocookie), nunca
+  descargar ni alojar; respeta derechos de autor.
+- Todo el contenido lleva aviso de que no sustituye consejo médico.
+- Recomendar, no imponer: dar la recomendación y dejar elegir.
+
+--------------------------------------------------------------------
+16) FLUJO DE DESARROLLO
+--------------------------------------------------------------------
+- Cada cambio: git pull → editar → git add -A && git commit -m "..."
+  && git push. Netlify publica solo en ~1 min. Bump del cache del
+  Service Worker en cada release (CACHE_NAME).
+- Monetización con planes: PENDIENTE (después de las pruebas).
+
+====================================================================
+Fin del prompt maestro — NutriMX v3.6
+====================================================================
