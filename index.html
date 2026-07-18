@@ -204,7 +204,7 @@
     .auth-btn:hover { background:rgba(255,255,255,.28); }
     .auth-btn-primario { background:#fff; color:#047857; font-weight:600; border:none; }
     .auth-btn-primario:hover { background:#ecfdf5; }
-    .auth-modal { position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:100; padding:16px; }
+    .auth-modal { position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:300; padding:16px; }
     .auth-caja { background:#fff; border-radius:16px; padding:24px; width:100%; max-width:380px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,.3); }
     .auth-cerrar { position:absolute; top:10px; right:12px; background:none; border:none; font-size:1.1rem; cursor:pointer; color:#6b7280; }
     .auth-titulo { font-size:1.2rem; font-weight:700; margin-bottom:14px; color:#065f46; }
@@ -307,6 +307,7 @@
     .splash { position:fixed; inset:0; z-index:200; overflow:hidden; display:flex; align-items:center; justify-content:center;
       background:linear-gradient(160deg,#022c22 0%,#065f46 45%,#059669 100%); transition:opacity .7s ease, visibility .7s; }
     .splash.oculta { opacity:0; visibility:hidden; pointer-events:none; }
+    body.bloqueado { overflow:hidden; }
     .splash-bg { position:absolute; inset:0; }
     .splash-emoji { position:absolute; left:var(--x); bottom:-80px; font-size:var(--s); opacity:0;
       animation:splashFlota var(--d) linear infinite; animation-delay:var(--delay);
@@ -328,9 +329,13 @@
     @keyframes splashBrillo { to { background-position:200% center; } }
     .splash-sub { font-size:1.15rem; opacity:.95; margin-bottom:6px; }
     .splash-mini { font-size:.85rem; opacity:.7; max-width:420px; margin:0 auto 26px; }
+    .splash-acciones { display:flex; flex-direction:column; gap:12px; align-items:center; margin-bottom:14px; }
     .splash-btn { background:#fff; color:#065f46; font-weight:800; font-size:1.05rem; border:none; border-radius:9999px;
-      padding:14px 44px; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,.35); transition:.2s; animation:splashPulsa 2s ease-in-out infinite; }
+      padding:14px 44px; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,.35); transition:.2s; min-width:260px; animation:splashPulsa 2s ease-in-out infinite; }
     .splash-btn:hover { transform:scale(1.06); background:#ecfdf5; }
+    .splash-btn-2 { background:transparent; color:#fff; border:2px solid rgba(255,255,255,.7); box-shadow:none; animation:none; font-size:.95rem; padding:12px 32px; }
+    .splash-btn-2:hover { background:rgba(255,255,255,.15); }
+    .splash-mini2 { font-size:.8rem; opacity:.75; max-width:380px; margin:8px auto 0; }
     @keyframes splashPulsa { 0%,100% { box-shadow:0 10px 30px rgba(0,0,0,.35); } 50% { box-shadow:0 10px 42px rgba(167,243,208,.55); } }
     .splash-ola { position:absolute; bottom:0; left:0; right:0; height:80px;
       background:radial-gradient(60% 100% at 50% 100%, rgba(255,255,255,.12), transparent); }
@@ -401,8 +406,12 @@
       <div class="splash-logo">🧬</div>
       <h1 class="splash-titulo">NutriMX</h1>
       <p class="splash-sub">Come mejor. Muévete más. <strong>Vive más fuerte.</strong></p>
-      <p class="splash-mini">Nutrición y ejercicio con evidencia científica — para hombres, mujeres, niños y adultos mayores 🇲🇽</p>
-      <button id="splashEntrar" class="splash-btn">Comenzar 💪</button>
+      <p class="splash-mini">Nutrición y ejercicio con evidencia científica, personalizados para ti — hombres, mujeres, niños y adultos mayores 🇲🇽</p>
+      <div class="splash-acciones">
+        <button id="splashRegistro" class="splash-btn">✨ Crear mi cuenta</button>
+        <button id="splashLogin" class="splash-btn splash-btn-2">Ya tengo cuenta · Entrar</button>
+      </div>
+      <p class="splash-mini2">Únete a nuestro grupo y recibe un plan de nutrición y ejercicio hecho para tu cuerpo y tu salud.</p>
     </div>
     <div class="splash-ola"></div>
   </div>
@@ -1951,17 +1960,9 @@
   <script src="./asistente.js"></script>
   <script src="./modelo.js"></script>
   <script src="./avatar.js"></script>
+  <script src="./acceso.js"></script>
   <script src="./app.js"></script>
   <script>
-    // Portada: botón en primera visita; auto-cierre breve en visitas siguientes
-    (function () {
-      const splash = document.getElementById('splash');
-      const btn = document.getElementById('splashEntrar');
-      const cerrar = () => { splash.classList.add('oculta'); };
-      btn.addEventListener('click', () => { localStorage.setItem('nutrimx_splash_visto', '1'); cerrar(); });
-      if (localStorage.getItem('nutrimx_splash_visto')) setTimeout(cerrar, 1800);
-    })();
-
     // Videoteca: reproducir al tocar (lazy embed, sin cookies)
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.video-card').forEach(card => {

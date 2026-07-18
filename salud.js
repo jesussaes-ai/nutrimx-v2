@@ -29,6 +29,7 @@ class SaludUI {
   // ==================== WIZARD ====================
 
   abrir() {
+    this.obligatorio = false;
     this.paso = 1;
     let m = document.getElementById('saludModal');
     if (!m) {
@@ -41,7 +42,23 @@ class SaludUI {
     this.renderPaso();
   }
 
+  /** Registro obligatorio: no se puede cerrar sin completar (salvo cerrar sesión). */
+  abrirObligatorio() {
+    if (this.datos && this.datos.analisis) return; // ya completo
+    this.abrir();
+    this.obligatorio = true;
+    this.renderPaso();
+  }
+
   cerrar() {
+    if (this.obligatorio && !(this.datos && this.datos.analisis)) {
+      // No permitir salir sin terminar; ofrecer cerrar sesión.
+      if (confirm('Necesitas completar tu registro para acceder. ¿Prefieres cerrar sesión y salir?')) {
+        if (window.nube) window.nube.salir();
+        const m = document.getElementById('saludModal'); if (m) m.classList.add('hidden');
+      }
+      return;
+    }
     const m = document.getElementById('saludModal');
     if (m) m.classList.add('hidden');
   }
@@ -151,7 +168,12 @@ class SaludUI {
     on('saludSig2', () => this.guardarPaso2());
     on('saludAtras3', () => { this.paso = 2; this.renderPaso(); });
     on('saludFin', () => this.finalizar());
-    on('saludCerrarFin', () => { this.cerrar(); this.renderResumen(); });
+    on('saludCerrarFin', () => {
+      this.obligatorio = false;
+      const m = document.getElementById('saludModal'); if (m) m.classList.add('hidden');
+      this.renderResumen();
+      if (window.acceso) window.acceso.verificarAcceso(); // conceder acceso al dashboard
+    });
     on('saludBorrar', () => this.borrarDatos());
   }
 

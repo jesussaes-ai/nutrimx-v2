@@ -38,6 +38,8 @@ class NubeNutriMX {
 
     this.renderAuthUI();
     if (this.user) await this.descargarDatos();
+    // Al cargar la app: decidir acceso (puerta / registro obligatorio / dashboard)
+    if (window.acceso) window.acceso.verificarAcceso();
   }
 
   // ==================== AUTH ====================
@@ -57,8 +59,9 @@ class NubeNutriMX {
     this.user = data.user;
     await this.descargarDatos();
     await this.subirDatos();
-    // Evaluación inicial de salud: pedirla si aún no existe
-    if (window.salud) setTimeout(() => window.salud.verificar(), 600);
+    // Decidir acceso: si falta la evaluación, se forzará; si está completa, entra al dashboard.
+    if (window.acceso) setTimeout(() => window.acceso.verificarAcceso(), 400);
+    else if (window.salud) setTimeout(() => window.salud.verificar(), 600);
     return data;
   }
 
@@ -66,6 +69,7 @@ class NubeNutriMX {
     await this.sb.auth.signOut();
     this.user = null;
     this.renderAuthUI();
+    if (window.acceso) window.acceso.alSalir();
   }
 
   // ==================== SYNC ====================
@@ -239,9 +243,16 @@ class NubeNutriMX {
     btn.disabled = true; btn.textContent = '...';
     try {
       if (this.modoAuth === 'registrar') {
-        await this.registrar(email, pass, nombre || email.split('@')[0]);
-        await this.entrar(email, pass).catch(() => {});
-        window.nutriApp && window.nutriApp.toast('✅ Cuenta creada. ¡Bienvenido!', 'success');
+        const reg = await this.registrar(email, pass, nombre || email.split('@')[0]);
+        // Si el proyecto no pide confirmación de correo, habrá sesión inmediata.
+        try { await this.entrar(email, pass); } catch (e2) {
+          // Requiere confirmar correo antes de entrar.
+          err.textContent = '✅ Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.';
+          err.classList.remove('hidden'); err.style.color = '#059669';
+          this.cambiarModoAuth('entrar');
+          return;
+        }
+        window.nutriApp && window.nutriApp.toast('✅ Cuenta creada. ¡Completa tu registro!', 'success');
       } else {
         await this.entrar(email, pass);
         window.nutriApp && window.nutriApp.toast('✅ Sesión iniciada', 'success');
