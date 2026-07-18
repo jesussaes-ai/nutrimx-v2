@@ -1,5 +1,5 @@
 // Service Worker para NutriMX v2.0 - Offline-first PWA
-const CACHE_NAME = 'nutrimx-v3.1';
+const CACHE_NAME = 'nutrimx-v3.2';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const STATIC_ASSETS = [
   './modelo.js',
   './avatar.js',
   './acceso.js',
+  './plan.js',
   './aviso-privacidad.html',
   './manifest.json',
   'https://cdn.tailwindcss.com',

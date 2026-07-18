@@ -234,6 +234,24 @@ class NutriApp {
 
   // ==================== TAB BUSCAR (NUTRICIÓN) ====================
 
+  // Normaliza texto: minúsculas, sin acentos, sin signos
+  normaliza(s) {
+    return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[(),/]/g, ' ');
+  }
+
+  // Coincidencia flexible: tolera plurales, acentos y palabras parciales
+  coincideAlimento(a, terms) {
+    const hay = this.normaliza(`${a.nombre} ${(a.search_terms || []).join(' ')} ${(a.tags || []).join(' ')}`);
+    const palabras = hay.split(/\s+/).filter(Boolean);
+    return terms.every(t => {
+      const tn = this.normaliza(t);
+      if (!tn) return true;
+      if (hay.includes(tn)) return true;
+      // plural/singular y coincidencia parcial por palabra
+      return palabras.some(w => w.includes(tn) || tn.includes(w));
+    });
+  }
+
   renderBuscar() {
     const container = document.getElementById('searchResults');
     const empty = document.getElementById('emptySearch');
@@ -251,10 +269,8 @@ class NutriApp {
       filtrados = filtrados.filter(a => a.categoria === this.categoriaActual);
     }
     if (this.busquedaActual) {
-      const terms = this.busquedaActual.toLowerCase().split(' ').filter(t => t);
-      filtrados = filtrados.filter(a =>
-        terms.every(t => a.nombre.toLowerCase().includes(t) || a.search_terms.some(st => st.includes(t)))
-      );
+      const terms = this.busquedaActual.trim().split(/\s+/).filter(t => t);
+      filtrados = filtrados.filter(a => this.coincideAlimento(a, terms));
     }
 
     if (filtrados.length === 0) {
@@ -630,8 +646,10 @@ class NutriApp {
     if (!alimento) return;
 
     this.modalComida = comida;
-    document.getElementById('modalMeal').textContent = comida.charAt(0).toUpperCase() + comida.slice(1);
-    document.getElementById('modalTitle').textContent = `Añadir a ${comida}`;
+    const meal = document.getElementById('modalMeal');
+    if (meal) meal.textContent = comida.charAt(0).toUpperCase() + comida.slice(1);
+    const sel = document.getElementById('modalComidaSel');
+    if (sel) sel.value = comida;
     document.getElementById('modalSearch').value = '';
     document.getElementById('modalResults').innerHTML = '';
     document.getElementById('modalOverlay').classList.add('open');
@@ -670,7 +688,9 @@ class NutriApp {
         const item = btn.closest('.food-item');
         const id = parseInt(item.dataset.id);
         const gramos = parseFloat(item.querySelector('.portion-input').value);
-        this.agregarAlimentoComida(id, gramos, this.modalComida);
+        const sel = document.getElementById('modalComidaSel');
+        const comida = sel ? sel.value : this.modalComida;
+        this.agregarAlimentoComida(id, gramos, comida);
         this.cerrarModal();
       });
     });
@@ -681,9 +701,9 @@ class NutriApp {
 
   buscarModal(query) {
     if (!query.trim()) { document.getElementById('modalResults').innerHTML = ''; return; }
-    const terms = query.toLowerCase().split(' ').filter(t => t);
+    const terms = query.trim().split(/\s+/).filter(t => t);
     const resultados = this.alimentos
-      .filter(a => terms.every(t => a.nombre.toLowerCase().includes(t) || a.search_terms.some(st => st.includes(t))))
+      .filter(a => this.coincideAlimento(a, terms))
       .slice(0, 20);
     this.renderModalResult(resultados);
   }
@@ -937,6 +957,7 @@ class NutriApp {
     });
     document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('hidden', c.id !== `tab-${tab}`));
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (tab === 'nutricion' && window.planUI) window.planUI.render();
   }
 
   // ==================== OBJETIVOS ====================

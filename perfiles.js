@@ -318,5 +318,6 @@ class PerfilesUI {
   }
 }
 
+window.PERFILES = PERFILES;
 window.perfilesUI = new PerfilesUI();
 document.addEventListener('DOMContentLoaded', () => window.perfilesUI.init());
