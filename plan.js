@@ -106,18 +106,50 @@ class PlanUI {
     const P = (window.PERFILES && window.PERFILES[perfilKey]) || null;
     if (!P) return null;
 
-    let rutina = P.ejercicio.rutinas[0]; // principiante por defecto
-    let aviso = '';
-    if (modalidad === 'silla_cama') {
-      const may = window.PERFILES.mayores;
-      rutina = may.ejercicio.rutinas.find(r => r.nombre.includes('cama')) || may.ejercicio.rutinas[0];
-      aviso = '⚠️ Según tu evaluación, empieza con ejercicios de silla/cama y consulta a tu médico antes de progresar.';
-    } else if (modalidad === 'bajo_impacto') {
-      aviso = '🦵 Se recomienda bajo impacto: prioriza las versiones suaves y sin dolor.';
-    } else if (modalidad === 'suave') {
-      aviso = '🚨 Empieza solo con actividad ligera (caminar) hasta tener autorización médica.';
+    // Opciones de modalidad que la persona puede ELEGIR (la recomendada va marcada)
+    const opciones = P.ejercicio.rutinas.map(r => ({ nombre: r.nombre, detalle: r.detalle, activa: false }));
+
+    // Para perfiles/condiciones con restricción, ofrecer TAMBIÉN una opción más activa (con aviso)
+    const restringido = (modalidad === 'silla_cama' || modalidad === 'bajo_impacto' || perfilKey === 'mayores');
+    if (restringido && window.PERFILES.hombre) {
+      opciones.push({
+        nombre: '💪 Fuerza de pie (más activa) — con visto bueno médico',
+        detalle: window.PERFILES.hombre.ejercicio.rutinas[0].detalle,
+        activa: true
+      });
     }
-    return { perfilKey, nombrePerfil: P.nombre, icono: P.icono, rutina, videos: P.ejercicio.videos.slice(0, 3), aviso, nota: P.ejercicio.nota };
+
+    // ¿Cuál recomendamos por defecto según la evaluación?
+    let recomendadaIdx = 0;
+    let recomendacion = 'Programa completo con progresión normal.';
+    if (modalidad === 'silla_cama') {
+      recomendadaIdx = opciones.findIndex(o => /cama/i.test(o.nombre));
+      recomendacion = 'Por tu evaluación (cirugía/recuperación reciente) te recomendamos empezar en cama o silla, y consultar a tu médico antes de progresar.';
+    } else if (modalidad === 'bajo_impacto') {
+      recomendadaIdx = opciones.findIndex(o => /silla|piso/i.test(o.nombre));
+      recomendacion = 'Te recomendamos bajo impacto (silla, piso o agua) para proteger tus articulaciones.';
+    } else if (modalidad === 'suave') {
+      recomendadaIdx = 0;
+      recomendacion = 'Te recomendamos empezar solo con actividad ligera (caminar) hasta tener autorización médica.';
+    } else if (perfilKey === 'mayores') {
+      recomendadaIdx = opciones.findIndex(o => /silla/i.test(o.nombre));
+      recomendacion = 'A tu edad recomendamos priorizar fuerza y equilibrio. Empieza donde te sientas cómodo — puedes elegir en silla, en piso, de pie o algo más activo.';
+    }
+    if (recomendadaIdx < 0) recomendadaIdx = 0;
+
+    // Elección guardada del usuario (si ya escogió antes)
+    let elegidaIdx = recomendadaIdx;
+    const guardada = localStorage.getItem('nutrimx_modalidad_ejercicio');
+    if (guardada !== null) {
+      const gi = opciones.findIndex(o => o.nombre === guardada);
+      if (gi >= 0) elegidaIdx = gi;
+    }
+
+    return {
+      perfilKey, nombrePerfil: P.nombre, icono: P.icono,
+      nota: P.ejercicio.nota, videos: P.ejercicio.videos.slice(0, 3),
+      opciones, recomendadaIdx, elegidaIdx, recomendacion
+    };
   }
 
   // ==================== RENDER ====================
@@ -145,21 +177,34 @@ class PlanUI {
     }).join('');
 
     const ej = this.planEjercicio();
-    const ejHtml = ej ? `
+    let ejHtml = '';
+    if (ej) {
+      const sel = ej.opciones[ej.elegidaIdx] || ej.opciones[ej.recomendadaIdx];
+      const botones = ej.opciones.map((o, i) => {
+        const esRec = i === ej.recomendadaIdx;
+        const activa = i === ej.elegidaIdx;
+        return `<button class="plan-modo ${activa ? 'activa' : ''}" data-modo="${i}">${o.nombre}${esRec ? ' <span class="plan-rec-badge">recomendada</span>' : ''}</button>`;
+      }).join('');
+      const avisoActiva = sel.activa ? '<p class="plan-aviso">⚠️ Elegiste una rutina más activa. Está bien querer más movimiento — solo asegúrate de tener el visto bueno de tu médico y de no sentir dolor ni mareo.</p>' : '';
+      ejHtml = `
       <div class="plan-ejercicio">
-        <h4 class="plan-h4">🏋️ Tu rutina sugerida (${ej.icono} ${ej.nombrePerfil})</h4>
-        ${ej.aviso ? `<p class="plan-aviso">${ej.aviso}</p>` : ''}
+        <h4 class="plan-h4">🏋️ Tu ejercicio (${ej.icono} ${ej.nombrePerfil})</h4>
+        <p class="plan-recom">🩺 <strong>Nuestra recomendación:</strong> ${ej.recomendacion}</p>
+        <p class="plan-elige-label">Pero tú decides cómo entrenar hoy — elige tu modalidad:</p>
+        <div class="plan-modos">${botones}</div>
+        ${avisoActiva}
+        <div class="plan-rutina-nombre">${sel.nombre}</div>
+        <ul class="plan-rutina">${sel.detalle.map(x => `<li>${x}</li>`).join('')}</ul>
         <p class="text-xs text-gray-500 mb-2">${ej.nota}</p>
-        <div class="plan-rutina-nombre">${ej.rutina.nombre}</div>
-        <ul class="plan-rutina">${ej.rutina.detalle.map(x => `<li>${x}</li>`).join('')}</ul>
         <div class="video-grid">${ej.videos.map(v => `
           <div class="video-card" data-video="${v.id}" data-titulo="${v.titulo}">
             <img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="${v.titulo}" loading="lazy">
             <span class="video-play">▶</span><span class="video-titulo">${v.titulo}</span>
           </div>`).join('')}</div>
         <div id="planVideoPlayer" class="video-player hidden"></div>
-        <button class="btn btn-secondary mt-2" id="planIrEjercicio">Ver rutinas completas en "Para ti" →</button>
-      </div>` : '';
+        <button class="btn btn-secondary mt-2" id="planIrEjercicio">Ver todas las rutinas en "Para ti" →</button>
+      </div>`;
+    }
 
     cont.innerHTML = `
       <div class="plan-header">
@@ -181,6 +226,16 @@ class PlanUI {
     if (irEj) irEj.addEventListener('click', () => window.nutriApp && window.nutriApp.cambiarTab('perfiles'));
     cont.querySelectorAll('.video-card').forEach(card => {
       card.addEventListener('click', () => this.reproducir(card.dataset.video, card.dataset.titulo));
+    });
+    // Selector de modalidad de ejercicio: guarda la elección del usuario
+    cont.querySelectorAll('.plan-modo').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (ej) {
+          const i = parseInt(btn.dataset.modo);
+          if (ej.opciones[i]) localStorage.setItem('nutrimx_modalidad_ejercicio', ej.opciones[i].nombre);
+          this.render();
+        }
+      });
     });
   }
 
