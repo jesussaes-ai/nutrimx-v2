@@ -93,10 +93,12 @@ class AsistenteUI {
     this.renderMensajes(true);
 
     try {
+      const modelo = window.modeloUI ? window.modeloUI.get() : '';
       const { data, error } = await window.nube.sb.functions.invoke('asistente', {
         body: {
           mensajes: this.mensajes.filter(m => m.role === 'user' || m.role === 'assistant').slice(-10),
-          contexto: this.contextoUsuario()
+          contexto: this.contextoUsuario(),
+          model: modelo || undefined
         }
       });
       if (error || !data || !data.ok) throw new Error((data && data.error) || 'Sin respuesta');

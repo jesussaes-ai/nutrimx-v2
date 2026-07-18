@@ -104,8 +104,14 @@ class NubeNutriMX {
       (dias || []).forEach(d => { app.registros[d.fecha] = d.data; });
       const { data: pesos } = await this.sb.from('pesos').select('fecha,peso');
       (pesos || []).forEach(p => { app.pesos[p.fecha] = parseFloat(p.peso); });
-      const { data: prof } = await this.sb.from('profiles').select('objetivos,datos').eq('id', this.user.id).maybeSingle();
+      const { data: prof } = await this.sb.from('profiles').select('objetivos,datos,modelo').eq('id', this.user.id).maybeSingle();
       if (prof && prof.objetivos) app.objetivos = { ...app.objetivos, ...prof.objetivos };
+      // Restaurar modelo de IA preferido del usuario
+      if (prof && prof.modelo && window.modeloUI) {
+        window.modeloUI.actual = prof.modelo;
+        localStorage.setItem('nutrimx_modelo', prof.modelo);
+        window.modeloUI.render();
+      }
       // Restaurar evaluación de salud desde la nube si no existe local
       if (prof && prof.datos && window.salud && !window.salud.datos) {
         window.salud.datos = prof.datos;
@@ -142,8 +148,9 @@ class NubeNutriMX {
   async analizarFoto(file) {
     if (!this.activa) throw new Error('Inicia sesión para usar el análisis con IA');
     const base64 = await this.prepararImagen(file);
+    const modelo = window.modeloUI ? window.modeloUI.get() : '';
     const { data, error } = await this.sb.functions.invoke('analizar-comida', {
-      body: { image: base64, media_type: 'image/jpeg' }
+      body: { image: base64, media_type: 'image/jpeg', model: modelo || undefined }
     });
     if (error) throw new Error(error.message || 'Error al analizar la foto');
     if (!data || !data.ok) throw new Error((data && data.error) || 'La IA no pudo analizar la imagen');
