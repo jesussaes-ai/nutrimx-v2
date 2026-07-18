@@ -134,13 +134,50 @@ class AvatarUI {
   }
 
   async abrirCamara(p) {
-    try {
-      this.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 640 }, audio: false });
-      document.getElementById(p + 'Video').srcObject = this.stream;
-      document.getElementById(p + 'CamZona').classList.remove('hidden');
-    } catch (e) {
-      this.error(p, 'No pude acceder a la cámara. Dale permiso al navegador o usa "Subir imagen".');
+    // Verificación previa
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      this.error(p, 'Tu navegador no permite usar la cámara aquí. Usa "Subir imagen" o elige un avatar.');
+      return;
     }
+    const errEl = document.getElementById(p + 'Error');
+    if (errEl) { errEl.classList.add('hidden'); errEl.style.color = '#dc2626'; }
+
+    // Aviso mientras el navegador muestra el permiso
+    this.error(p, '📷 Aparecerá un aviso del navegador arriba: toca "Permitir" para usar tu cámara…');
+
+    // Intentos con restricciones cada vez más flexibles (evita OverconstrainedError)
+    const intentos = [
+      { video: { facingMode: 'user' }, audio: false },
+      { video: true, audio: false }
+    ];
+    let stream = null, ultimoError = null;
+    for (const c of intentos) {
+      try { stream = await navigator.mediaDevices.getUserMedia(c); break; }
+      catch (e) { ultimoError = e; if (e.name === 'NotAllowedError' || e.name === 'NotFoundError') break; }
+    }
+
+    if (stream) {
+      if (errEl) errEl.classList.add('hidden');
+      this.stream = stream;
+      const video = document.getElementById(p + 'Video');
+      video.srcObject = stream;
+      document.getElementById(p + 'CamZona').classList.remove('hidden');
+      return;
+    }
+
+    // Mensajes específicos y accionables según el error
+    const n = ultimoError ? ultimoError.name : '';
+    let msg;
+    if (n === 'NotAllowedError' || n === 'SecurityError') {
+      msg = '🔒 El navegador bloqueó la cámara. Haz clic en el ícono de cámara 📷 en la barra de direcciones (arriba a la derecha), elige "Permitir siempre" y vuelve a tocar "Tomar foto". O usa "Subir imagen".';
+    } else if (n === 'NotFoundError' || n === 'DevicesNotFoundError') {
+      msg = '🎥 No detecté ninguna cámara en tu dispositivo. Usa "Subir imagen" o elige un avatar.';
+    } else if (n === 'NotReadableError') {
+      msg = '⚠️ Tu cámara está ocupada por otra app (Zoom, Teams, etc.). Ciérrala y vuelve a intentar, o usa "Subir imagen".';
+    } else {
+      msg = 'No pude acceder a la cámara. Usa "Subir imagen" o elige un avatar.';
+    }
+    this.error(p, msg);
   }
 
   capturar(p) {
