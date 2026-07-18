@@ -82,11 +82,13 @@ class NutriApp {
     try {
       // Alimentos
       const alimentosGuardados = localStorage.getItem('nutrimx_alimentos');
+      const totalCiencia = (this.ciencia && this.ciencia.alimentos) ? this.ciencia.alimentos.length : 0;
       let guardadosValidos = false;
       if (alimentosGuardados) {
         try {
           const parsed = JSON.parse(alimentosGuardados);
-          if (Array.isArray(parsed) && parsed.length > 0) {
+          // Válido solo si coincide con la cantidad actual de la base (para recibir alimentos nuevos)
+          if (Array.isArray(parsed) && parsed.length > 0 && parsed.length === totalCiencia) {
             this.alimentos = parsed;
             guardadosValidos = true;
           }

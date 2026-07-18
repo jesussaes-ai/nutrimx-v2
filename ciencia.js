@@ -130,6 +130,74 @@ const CIENCIA = {
     {id:94, nombre:"Semaglutida (Ozempic/Wegovy)", cat:"Medicamento", kcal:0, p:0, g:0, ch:0, f:0, evid:"GLP-1 RA: peso -15% a 68 sem, saciedad, glucosa. Requiere endocrino, efectos GI, costo", tags:["GLP-1","endocrino","recupera-peso-si-suspende"]},
     {id:95, nombre:"Tirzepatida (Mounjaro/Zepbound)", cat:"Medicamento", kcal:0, p:0, g:0, ch:0, f:0, evid:"GIP/GLP-1 dual: peso -20%+, superior semaglutida. Endocrino obligatorio", tags:["dual-GIP-GLP1","superior","endocrino"]},
     {id:96, nombre:"Metformina", cat:"Medicamento", kcal:0, p:0, g:0, ch:0, f:0, evid:"AMPK, sensibilidad insulina, modesto peso -2-3kg, longevidad, bajo costo", tags:["AMPK","insulina","barato","longevidad"]},
+
+    // ==================== ALIMENTOS ANTIINFLAMATORIOS Y VARIEDAD ====================
+    // Enfoque en polifenoles, omega-3, fibra fermentable y baja carga glucémica
+    // PROTEÍNAS antiinflamatorias (omega-3 / magras)
+    {id:97, nombre:"Sardinas en aceite (escurridas)", cat:"Proteína", kcal:208, p:25, g:11, ch:0, f:0, evid:"Omega-3 EPA/DHA, calcio (espina), vit D — potente antiinflamatorio", tags:["antiinflamatorio","omega3","calcio","barato"]},
+    {id:98, nombre:"Caballa / macarela", cat:"Proteína", kcal:205, p:19, g:14, ch:0, f:0, evid:"Muy alto omega-3, reduce PCR e inflamación sistémica", tags:["antiinflamatorio","omega3"]},
+    {id:99, nombre:"Trucha", cat:"Proteína", kcal:148, p:20, g:7, ch:0, f:0, evid:"Omega-3, proteína completa, bajo mercurio", tags:["antiinflamatorio","omega3","magra"]},
+    {id:100, nombre:"Camarón", cat:"Proteína", kcal:99, p:24, g:0.3, ch:0.2, f:0, evid:"Muy magro, astaxantina antioxidante, selenio", tags:["magra","astaxantina","antioxidante"]},
+    {id:101, nombre:"Mejillones cocidos", cat:"Proteína", kcal:172, p:24, g:4.5, ch:7, f:0, evid:"Omega-3, hierro, B12, zinc — antiinflamatorio marino", tags:["antiinflamatorio","omega3","hierro","B12"]},
+    {id:102, nombre:"Muslo de pollo sin piel", cat:"Proteína", kcal:121, p:19, g:4.8, ch:0, f:0, evid:"Más jugoso y barato que pechuga, hierro y zinc", tags:["barata","versatil","jugoso"]},
+    {id:103, nombre:"Sardina fresca a la plancha", cat:"Proteína", kcal:185, p:24, g:10, ch:0, f:0, evid:"Omega-3 accesible y económico, coenzima Q10", tags:["antiinflamatorio","omega3","barato"]},
+
+    // VERDURAS antiinflamatorias (crucíferas, hojas, coloridas)
+    {id:104, nombre:"Kale / col rizada", cat:"Verdura", kcal:35, p:2.9, g:0.6, ch:4.4, f:4.1, evid:"Sulforafano, luteína, vit K y C — antiinflamatorio y detox hepático", tags:["antiinflamatorio","sulforafano","luteina"]},
+    {id:105, nombre:"Acelga", cat:"Verdura", kcal:19, p:1.8, g:0.2, ch:3.7, f:1.6, evid:"Betalaínas, magnesio, nitratos — antioxidante", tags:["antiinflamatorio","betalainas","magnesio"]},
+    {id:106, nombre:"Berros", cat:"Verdura", kcal:11, p:2.3, g:0.1, ch:1.3, f:0.5, evid:"Isotiocianatos, altísima densidad nutricional por caloría", tags:["antiinflamatorio","denso","detox"]},
+    {id:107, nombre:"Pimiento rojo", cat:"Verdura", kcal:31, p:1, g:0.3, ch:6, f:2.1, evid:"Vitamina C (3x naranja), capsantina antioxidante", tags:["antiinflamatorio","vitaminaC","antioxidante"]},
+    {id:108, nombre:"Zanahoria", cat:"Verdura", kcal:41, p:0.9, g:0.2, ch:10, f:2.8, evid:"Betacaroteno (vit A), falcarinol antiinflamatorio", tags:["antiinflamatorio","betacaroteno","vista"]},
+    {id:109, nombre:"Betabel / remolacha", cat:"Verdura", kcal:43, p:1.6, g:0.2, ch:10, f:2.8, evid:"Nitratos → óxido nítrico, betalaínas antiinflamatorias, rendimiento", tags:["antiinflamatorio","nitratos","rendimiento"]},
+    {id:110, nombre:"Calabacita / calabaza italiana", cat:"Verdura", kcal:17, p:1.2, g:0.3, ch:3.1, f:1, evid:"Muy baja caloría, luteína, potasio — versátil en guisos", tags:["volumen","versatil","ligero"]},
+    {id:111, nombre:"Ejotes / judías verdes", cat:"Verdura", kcal:31, p:1.8, g:0.2, ch:7, f:2.7, evid:"Fibra, flavonoides, saciedad — clásico de guisos mexicanos", tags:["fibra","versatil","tradicional"]},
+    {id:112, nombre:"Espárragos", cat:"Verdura", kcal:20, p:2.2, g:0.1, ch:3.9, f:2.1, evid:"Inulina (prebiótico), glutatión, diurético natural", tags:["antiinflamatorio","prebiotico","glutation"]},
+    {id:113, nombre:"Champiñones / setas", cat:"Verdura", kcal:22, p:3.1, g:0.3, ch:3.3, f:1, evid:"Betaglucanos inmunomoduladores, ergotioneína antioxidante, vit D", tags:["antiinflamatorio","betaglucanos","inmune"]},
+    {id:114, nombre:"Alcachofa", cat:"Verdura", kcal:47, p:3.3, g:0.2, ch:11, f:5.4, evid:"Cinarina hepatoprotectora, inulina prebiótica, silimarina", tags:["antiinflamatorio","prebiotico","higado"]},
+    {id:115, nombre:"Berenjena", cat:"Verdura", kcal:25, p:1, g:0.2, ch:6, f:3, evid:"Nasunina (antocianina) protege neuronas, fibra, saciedad", tags:["antiinflamatorio","antocianinas","fibra"]},
+    {id:116, nombre:"Cebolla morada", cat:"Verdura", kcal:40, p:1.1, g:0.1, ch:9, f:1.7, evid:"Quercetina antiinflamatoria, prebiótico FOS, alicina", tags:["antiinflamatorio","quercetina","prebiotico"]},
+    {id:117, nombre:"Pepino", cat:"Verdura", kcal:15, p:0.7, g:0.1, ch:3.6, f:0.5, evid:"Hidratante, fisetina antiinflamatoria, muy bajo calórico", tags:["hidratante","ligero","fresco"]},
+    {id:118, nombre:"Col morada", cat:"Verdura", kcal:31, p:1.4, g:0.2, ch:7, f:2.1, evid:"Antocianinas + glucosinolatos, doble antiinflamatorio", tags:["antiinflamatorio","antocianinas","cruciferа"]},
+
+    // FRUTAS antiinflamatorias (bayas, cítricos, tropicales enzimáticas)
+    {id:119, nombre:"Arándanos / blueberries", cat:"Fruta", kcal:57, p:0.7, g:0.3, ch:14, f:2.4, evid:"Antocianinas — de los antioxidantes más potentes, cognición y corazón", tags:["antiinflamatorio","antocianinas","cerebro"]},
+    {id:120, nombre:"Fresas", cat:"Fruta", kcal:32, p:0.7, g:0.3, ch:7.7, f:2, evid:"Vitamina C, fisetina, bajo índice glucémico", tags:["antiinflamatorio","vitaminaC","bajo-IG"]},
+    {id:121, nombre:"Frambuesas", cat:"Fruta", kcal:52, p:1.2, g:0.6, ch:12, f:6.5, evid:"Muy alta fibra, cetonas y elagitaninos antiinflamatorios", tags:["antiinflamatorio","fibra","elagitaninos"]},
+    {id:122, nombre:"Zarzamora / mora azul", cat:"Fruta", kcal:43, p:1.4, g:0.5, ch:10, f:5.3, evid:"Antocianinas, fibra, vit C — antiinflamatorio y saciante", tags:["antiinflamatorio","antocianinas","fibra"]},
+    {id:123, nombre:"Cereza", cat:"Fruta", kcal:63, p:1, g:0.2, ch:16, f:2.1, evid:"Antocianinas reducen ácido úrico e inflamación (gota, recuperación)", tags:["antiinflamatorio","acido-urico","recuperacion"]},
+    {id:124, nombre:"Piña", cat:"Fruta", kcal:50, p:0.5, g:0.1, ch:13, f:1.4, evid:"Bromelina — enzima antiinflamatoria y digestiva", tags:["antiinflamatorio","bromelina","digestiva"]},
+    {id:125, nombre:"Papaya", cat:"Fruta", kcal:43, p:0.5, g:0.3, ch:11, f:1.7, evid:"Papaína digestiva, betacaroteno, licopeno antiinflamatorio", tags:["antiinflamatorio","papaina","digestiva"]},
+    {id:126, nombre:"Kiwi", cat:"Fruta", kcal:61, p:1.1, g:0.5, ch:15, f:3, evid:"Vitamina C altísima, actinidina, mejora tránsito y sueño", tags:["antiinflamatorio","vitaminaC","sueño"]},
+    {id:127, nombre:"Naranja", cat:"Fruta", kcal:47, p:0.9, g:0.1, ch:12, f:2.4, evid:"Hesperidina y vit C — antiinflamatorio vascular", tags:["antiinflamatorio","vitaminaC","hesperidina"]},
+    {id:128, nombre:"Toronja / pomelo", cat:"Fruta", kcal:42, p:0.8, g:0.1, ch:11, f:1.6, evid:"Naringenina, bajo IG, saciedad (ojo con algunos fármacos)", tags:["antiinflamatorio","naringenina","bajo-IG"]},
+    {id:129, nombre:"Granada", cat:"Fruta", kcal:83, p:1.7, g:1.2, ch:19, f:4, evid:"Punicalaginas — potente antioxidante, salud cardiovascular", tags:["antiinflamatorio","punicalaginas","corazon"]},
+    {id:130, nombre:"Uva roja", cat:"Fruta", kcal:69, p:0.7, g:0.2, ch:18, f:0.9, evid:"Resveratrol antiinflamatorio y de longevidad (en la piel)", tags:["antiinflamatorio","resveratrol","longevidad"]},
+    {id:131, nombre:"Guayaba", cat:"Fruta", kcal:68, p:2.6, g:1, ch:14, f:5.4, evid:"Vitamina C (4x naranja), licopeno, fibra alta — fruta mexicana", tags:["antiinflamatorio","vitaminaC","fibra","tradicional"]},
+
+    // GRASAS buenas, SEMILLAS y FRUTOS SECOS antiinflamatorios
+    {id:132, nombre:"Aceite de oliva extra virgen", cat:"Grasa", kcal:884, p:0, g:100, ch:0, f:0, evid:"Oleocanthal (efecto tipo ibuprofeno), polifenoles — base dieta mediterránea", tags:["antiinflamatorio","oleocanthal","mediterranea"]},
+    {id:133, nombre:"Aceitunas", cat:"Grasa", kcal:115, p:0.8, g:11, ch:6, f:3.2, evid:"Grasa monoinsaturada, hidroxitirosol antioxidante", tags:["antiinflamatorio","monoinsaturada","snack"]},
+    {id:134, nombre:"Semillas de chía", cat:"Semilla", kcal:486, p:17, g:31, ch:42, f:34, evid:"Omega-3 ALA, fibra soluble (gel saciante), calcio", tags:["antiinflamatorio","omega3","fibra","calcio"]},
+    {id:135, nombre:"Semillas de linaza molida", cat:"Semilla", kcal:534, p:18, g:42, ch:29, f:27, evid:"Lignanos, omega-3 ALA, fibra — hormonal y digestivo", tags:["antiinflamatorio","lignanos","omega3","fibra"]},
+    {id:136, nombre:"Nuez de Castilla (walnut)", cat:"Fruto seco", kcal:654, p:15, g:65, ch:14, f:6.7, evid:"Único fruto seco alto en omega-3 ALA, mejora perfil lipídico", tags:["antiinflamatorio","omega3","corazon"]},
+    {id:137, nombre:"Almendra", cat:"Fruto seco", kcal:579, p:21, g:50, ch:22, f:12, evid:"Vitamina E antioxidante, magnesio, fibra, saciedad", tags:["antiinflamatorio","vitaminaE","magnesio"]},
+    {id:138, nombre:"Semillas de calabaza (pepitas)", cat:"Semilla", kcal:559, p:30, g:49, ch:11, f:6, evid:"Zinc, magnesio, alto proteína vegetal — snack mexicano", tags:["zinc","magnesio","proteina","tradicional"]},
+    {id:139, nombre:"Nuez de la India (anacardo)", cat:"Fruto seco", kcal:553, p:18, g:44, ch:30, f:3.3, evid:"Magnesio, cobre, grasa monoinsaturada", tags:["magnesio","monoinsaturada","cremoso"]},
+
+    // CEREALES INTEGRALES y PSEUDO-CEREALES (baja inflamación, fibra)
+    {id:140, nombre:"Arroz integral", cat:"Cereal", kcal:112, p:2.6, g:0.9, ch:24, f:1.8, evid:"Fibra y magnesio, menor pico glucémico que arroz blanco", tags:["fibra","integral","bajo-IG"]},
+    {id:141, nombre:"Avena en hojuelas", cat:"Cereal", kcal:389, p:17, g:7, ch:66, f:11, evid:"Betaglucano baja colesterol, saciedad prolongada, fibra fermentable", tags:["antiinflamatorio","betaglucano","fibra","saciante"]},
+    {id:142, nombre:"Quinoa cocida", cat:"Pseudo-cereal", kcal:120, p:4.4, g:1.9, ch:21, f:2.8, evid:"Proteína completa (todos los aminoácidos), sin gluten, magnesio", tags:["completo","sin-gluten","magnesio"]},
+    {id:143, nombre:"Trigo sarraceno / alforfón", cat:"Pseudo-cereal", kcal:92, p:3.4, g:0.6, ch:20, f:2.7, evid:"Rutina antiinflamatoria, sin gluten, IG bajo", tags:["antiinflamatorio","rutina","sin-gluten"]},
+    {id:144, nombre:"Cebada perlada cocida", cat:"Cereal", kcal:123, p:2.3, g:0.4, ch:28, f:3.8, evid:"Betaglucano, muy saciante, prebiótico", tags:["betaglucano","saciante","prebiotico"]},
+
+    // ESPECIAS y BEBIDAS antiinflamatorias
+    {id:145, nombre:"Jengibre fresco", cat:"Especia", kcal:80, p:1.8, g:0.8, ch:18, f:2, evid:"Gingeroles — antiinflamatorio, antináusea, digestivo (uso en gramos pequeños)", tags:["antiinflamatorio","gingeroles","digestivo"]},
+    {id:146, nombre:"Cúrcuma (con pimienta negra)", cat:"Especia", kcal:312, p:9.7, g:3.3, ch:67, f:22, evid:"Curcumina — antiinflamatorio potente; la piperina ↑ absorción 2000%", tags:["antiinflamatorio","curcumina","articulaciones"]},
+    {id:147, nombre:"Canela", cat:"Especia", kcal:247, p:4, g:1.2, ch:81, f:53, evid:"Mejora sensibilidad a la insulina, antioxidante (uso en pizcas)", tags:["antiinflamatorio","insulina","glucosa"]},
+    {id:148, nombre:"Té verde (matcha/hoja)", cat:"Bebida", kcal:1, p:0, g:0, ch:0.2, f:0, evid:"EGCG antiinflamatorio, termogénesis leve, L-teanina calma", tags:["antiinflamatorio","EGCG","termogenico"]},
+    {id:149, nombre:"Kéfir natural", cat:"Fermentado", kcal:41, p:3.3, g:1, ch:4.5, f:0, evid:"Probióticos diversos, mejora microbiota e inflamación intestinal", tags:["antiinflamatorio","probioticos","microbiota"]},
+    {id:150, nombre:"Chocolate oscuro 85%+", cat:"Grasa", kcal:598, p:8, g:43, ch:46, f:11, evid:"Flavanoles del cacao — antiinflamatorio vascular y ánimo (porción pequeña)", tags:["antiinflamatorio","flavanoles","cacao"]},
   ],
 
   // ----------------------------------------------------------

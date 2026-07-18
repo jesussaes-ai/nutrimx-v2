@@ -145,9 +145,17 @@ class PlanUI {
       if (gi >= 0) elegidaIdx = gi;
     }
 
+    // Rotar 3 videos por día para dar variedad (de la videoteca completa del perfil)
+    const todos = P.ejercicio.videos || [];
+    const dia = new Date().getDate() + (this.forzar || 0);
+    const videos = [];
+    for (let k = 0; k < Math.min(3, todos.length); k++) {
+      videos.push(todos[(dia * 3 + k) % todos.length]);
+    }
+
     return {
       perfilKey, nombrePerfil: P.nombre, icono: P.icono,
-      nota: P.ejercicio.nota, videos: P.ejercicio.videos.slice(0, 3),
+      nota: P.ejercicio.nota, videos,
       opciones, recomendadaIdx, elegidaIdx, recomendacion
     };
   }

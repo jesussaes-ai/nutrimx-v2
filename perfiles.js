@@ -29,9 +29,23 @@ const PERFILES = {
       ],
       videos: [
         { id: 'YNNmzqe9TgM', titulo: 'Rutina full body perfecta (3x/sem)' },
+        { id: 'y9-_6xBgJbE', titulo: 'Principiantes en casa (20 min)' },
+        { id: 'WnYR9zSHyKw', titulo: 'Completa: cardio + fuerza + abdomen' },
+        { id: '8I17t1Sl9C4', titulo: 'Ejercicios básicos en casa (20 min)' },
+        { id: 'UDJfUhureBA', titulo: 'Adelgazar en casa (principiantes)' },
+        { id: '1Ue8uT4lT30', titulo: 'Súper amigable — empieza de cero' },
+        { id: 'Gq81mz8FaaE', titulo: 'Ejercicios para hombres en casa' },
         { id: 'pxcO2fFBmSk', titulo: 'Rutina 5 días — masa muscular' },
         { id: 'aM4MuKmDVFs', titulo: 'Full body en casa o gym' },
-        { id: 'kjEyN9XHqOA', titulo: 'Cuerpo completo 24 min (mancuernas)' }
+        { id: 'kjEyN9XHqOA', titulo: 'Cuerpo completo 24 min (mancuernas)' },
+        { id: 'laShoFgYC04', titulo: 'Pecho y espalda (38 min)' },
+        { id: 'HJOrVf6Uyx8', titulo: 'Pecho, brazos y espalda sin pesas' },
+        { id: 'UiKMl6jY1hI', titulo: 'Pecho y hombros (20 min)' },
+        { id: 'IfIt6ZKuJgc', titulo: 'Pecho y espalda con mancuernas' },
+        { id: 'G4BqRfWl1fk', titulo: 'Pecho y espalda súper efectiva' },
+        { id: 'wc0Kg7XfFnc', titulo: 'Cardio HIIT 20 min — quema grasa' },
+        { id: 'VG5tx23HkBs', titulo: 'Cardio HIIT quema grasa rápido' },
+        { id: 'GhnKIwcrVxQ', titulo: 'Cardio HIIT todo de pie (20 min)' }
       ]
     },
     alimentacion: {
@@ -80,7 +94,21 @@ const PERFILES = {
         { id: 'CRaFIjuHhjE', titulo: 'Piernas y glúteos — 7 mejores ejercicios' },
         { id: '1cqld5q7qrA', titulo: 'Rutina 3 días para mujeres' },
         { id: 'tLBkvyoJWsY', titulo: 'Rutina 5 días — glúteos y piernas' },
-        { id: 'bj0Tl0x1KwQ', titulo: 'Glúteos, abdomen y piernas completa' }
+        { id: 'bj0Tl0x1KwQ', titulo: 'Glúteos, abdomen y piernas completa' },
+        { id: '9v3uFEAL7Ys', titulo: 'Total body en casa' },
+        { id: 'rTvIPpU_-dU', titulo: 'Fuerza cuerpo entero (30 min)' },
+        { id: 'wXC2EXuXoIc', titulo: 'Principiantes en casa' },
+        { id: 'Z9Xp_lUrcrc', titulo: 'Principiantes — 7 minutos' },
+        { id: 'RKlsVHoYN8g', titulo: 'Fitness completo para principiantes' },
+        { id: '2WxsK0pcvFg', titulo: 'Cuerpo completo para principiantes' },
+        { id: 'koxxCieSENM', titulo: 'Tonifica piernas y glúteos (20 min)' },
+        { id: 'X1EcYmpUH8A', titulo: 'Pierna y glúteos sin equipo' },
+        { id: 'PPQJAcRAwU4', titulo: 'Sin pesas — glúteos y piernas (20 min)' },
+        { id: '2oV6ZwGcdls', titulo: 'Glúteos y piernas fuertes (20 min)' },
+        { id: '0A5bgacq46o', titulo: 'GAP con mancuernas (20 min)' },
+        { id: '90ZEi11qILk', titulo: '13 min intensos — glúteos y piernas' },
+        { id: 'TNq9Gzc5neE', titulo: 'Piernas tonificadas y glúteos' },
+        { id: 'a6-10WhiozA', titulo: 'Cardio para adelgazar (20 min)' }
       ]
     },
     alimentacion: {
@@ -130,7 +158,17 @@ const PERFILES = {
         { id: 'HZ54ZGuvVkw', titulo: 'Rutina de ejercicio para niños en casa' },
         { id: 'mC-vnuz34tM', titulo: 'Ejercicio para niños — 15 minutos' },
         { id: 'VrSb67s-PLk', titulo: '30 ejercicios divertidos en casa' },
-        { id: 'SCGhftqIDXM', titulo: 'Circuito motriz con juegos' }
+        { id: 'SCGhftqIDXM', titulo: 'Circuito motriz con juegos' },
+        { id: '88YA3vB4fes', titulo: '43 ejercicios divertidos con un bastón' },
+        { id: 'w2kjdXKwnRs', titulo: '33 ejercicios sin material' },
+        { id: 'upL1Yl-tul8', titulo: 'Juegos y ejercicios de educación física' },
+        { id: 'mxrbGrtwI9M', titulo: 'Educación física en casa (juegos)' },
+        { id: 'jTAExrTQQKg', titulo: 'Ejercicios para niños y niñas' },
+        { id: 'DOEq-pv8UyE', titulo: 'Cardio infantil bajo impacto (20 min)' },
+        { id: 'r-i5BqoV8FM', titulo: '¡Mueve tu cuerpo! (baile)' },
+        { id: '77Gs6raEPp4', titulo: '10 min — kids workout en casa' },
+        { id: 'OTTmS50aB2E', titulo: '9 min — rutina superhéroe' },
+        { id: 'OPFZphOrHa8', titulo: 'Zumba Kids — baile divertido' }
       ]
     },
     alimentacion: {
@@ -183,7 +221,16 @@ const PERFILES = {
         { id: '67wl05H1K3U', titulo: 'Entrenamiento en silla — adultos mayores' },
         { id: 'FPe2R4QwgzE', titulo: 'Fortalecimiento muscular sentado' },
         { id: 'o-4R_BNYyiM', titulo: 'Rutina 70+ años sentados en silla' },
-        { id: 'UQx5qhptp4s', titulo: 'Rutina y estiramientos sentados' }
+        { id: 'UQx5qhptp4s', titulo: 'Rutina y estiramientos sentados' },
+        { id: '4jJLToTbt9A', titulo: 'Gimnasia de pie para mayores' },
+        { id: 'z-qvGdhp1c4', titulo: '14 ejercicios: fuerza, equilibrio y marcha' },
+        { id: 'VneNlQTGucM', titulo: 'Cardio y cintura — bajo impacto' },
+        { id: 'P1dxZc_G6ns', titulo: 'Yoga de pie: fuerza y equilibrio' },
+        { id: 'fPvr620TLX4', titulo: 'Bajo impacto para artrosis' },
+        { id: 'Jw5-dFjXyls', titulo: 'Marcha y equilibrio (5 ejercicios)' },
+        { id: 'mC_Wdu6d-rM', titulo: 'Equilibrio — prevención de caídas' },
+        { id: '_eCF5TP2tc4', titulo: 'Balance y equilibrio para mayores' },
+        { id: '3A-13HmFxOw', titulo: 'Equilibrio para mayores de 80 años' }
       ]
     },
     alimentacion: {
