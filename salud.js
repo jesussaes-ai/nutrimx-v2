@@ -59,6 +59,7 @@ class SaludUI {
       cuerpo = `
         <h3 class="auth-titulo">📋 Tu evaluación inicial (1/3)</h3>
         <p class="salud-sub">Con estos datos personalizamos tus calorías, proteína y ejercicios seguros.</p>
+        <div id="saludAvatar" class="salud-avatar-wrap"></div>
         <div class="salud-grid">
           <div><label class="auth-label">Sexo</label>
             <select id="evSexo" class="input">
@@ -134,6 +135,13 @@ class SaludUI {
     }
 
     m.innerHTML = `<div class="auth-caja salud-caja"><button class="auth-cerrar" id="saludCerrarX">✕</button>${cuerpo}</div>`;
+
+    // Foto de perfil en el paso 1 del registro
+    if (this.paso === 1 && window.avatarUI) {
+      window.avatarUI.render('saludAvatar', 'sav', {
+        titulo: '<label class="auth-label">Tu foto de perfil (opcional)</label>'
+      });
+    }
 
     // Listeners
     const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };

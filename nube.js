@@ -104,8 +104,15 @@ class NubeNutriMX {
       (dias || []).forEach(d => { app.registros[d.fecha] = d.data; });
       const { data: pesos } = await this.sb.from('pesos').select('fecha,peso');
       (pesos || []).forEach(p => { app.pesos[p.fecha] = parseFloat(p.peso); });
-      const { data: prof } = await this.sb.from('profiles').select('objetivos,datos,modelo').eq('id', this.user.id).maybeSingle();
+      const { data: prof } = await this.sb.from('profiles').select('objetivos,datos,modelo,avatar').eq('id', this.user.id).maybeSingle();
       if (prof && prof.objetivos) app.objetivos = { ...app.objetivos, ...prof.objetivos };
+      // Restaurar foto de perfil
+      if (prof && prof.avatar && window.avatarUI) {
+        window.avatarUI.avatar = prof.avatar;
+        localStorage.setItem('nutrimx_avatar', prof.avatar);
+        window.avatarUI.pintarHeader();
+        window.avatarUI.render();
+      }
       // Restaurar modelo de IA preferido del usuario
       if (prof && prof.modelo && window.modeloUI) {
         window.modeloUI.actual = prof.modelo;
