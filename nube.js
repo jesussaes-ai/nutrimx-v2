@@ -221,6 +221,8 @@ class NubeNutriMX {
     this.modoAuth = modo;
     document.getElementById('authTitulo').textContent = modo === 'entrar' ? 'Iniciar sesión' : 'Crear cuenta';
     document.getElementById('authNombreWrap').classList.toggle('hidden', modo === 'entrar');
+    const priv = document.getElementById('authPrivacidadWrap');
+    if (priv) priv.classList.toggle('hidden', modo === 'entrar');
     document.getElementById('authSubmit').textContent = modo === 'entrar' ? 'Entrar' : 'Registrarme';
     document.getElementById('authAlt').innerHTML = modo === 'entrar'
       ? '¿No tienes cuenta? <a href="#" id="authSwitch">Regístrate</a>'
@@ -239,18 +241,27 @@ class NubeNutriMX {
     err.classList.add('hidden');
     if (!email || !pass) { err.textContent = 'Escribe tu email y contraseña'; err.classList.remove('hidden'); return; }
     if (pass.length < 8) { err.textContent = 'La contraseña debe tener al menos 8 caracteres'; err.classList.remove('hidden'); return; }
+    err.style.color = '';
+    if (this.modoAuth === 'registrar' && !this.c('authPrivacidad')) {
+      err.textContent = 'Para crear tu cuenta debes aceptar el Aviso de Privacidad.';
+      err.classList.remove('hidden'); return;
+    }
     const btn = document.getElementById('authSubmit');
     btn.disabled = true; btn.textContent = '...';
     try {
       if (this.modoAuth === 'registrar') {
         const reg = await this.registrar(email, pass, nombre || email.split('@')[0]);
-        // Si el proyecto no pide confirmación de correo, habrá sesión inmediata.
-        try { await this.entrar(email, pass); } catch (e2) {
-          // Requiere confirmar correo antes de entrar.
-          err.textContent = '✅ Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.';
-          err.classList.remove('hidden'); err.style.color = '#059669';
-          this.cambiarModoAuth('entrar');
-          return;
+        // Sin confirmación de correo, la sesión es inmediata.
+        try {
+          await this.entrar(email, pass);
+        } catch (e2) {
+          const m2 = (e2.message || '').toLowerCase();
+          if (m2.includes('already') || (reg && reg.user && Array.isArray(reg.user.identities) && reg.user.identities.length === 0)) {
+            err.textContent = 'Ese correo ya tiene una cuenta. Usa "Inicia sesión" con tu contraseña.';
+            err.classList.remove('hidden'); this.cambiarModoAuth('entrar'); return;
+          }
+          err.textContent = 'No se pudo iniciar sesión automáticamente. Intenta "Inicia sesión".';
+          err.classList.remove('hidden'); this.cambiarModoAuth('entrar'); return;
         }
         window.nutriApp && window.nutriApp.toast('✅ Cuenta creada. ¡Completa tu registro!', 'success');
       } else {

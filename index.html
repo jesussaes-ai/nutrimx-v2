@@ -214,6 +214,9 @@
     .auth-alt { font-size:.8rem; text-align:center; margin-top:12px; }
     .auth-alt a { color:#047857; font-weight:600; }
     .auth-nota { font-size:.7rem; color:#9ca3af; margin-top:12px; text-align:center; }
+    .auth-privacidad { display:flex; align-items:flex-start; gap:9px; margin-top:12px; font-size:.78rem; color:#374151; background:#f0fdf4; border:1px solid #a7f3d0; border-radius:10px; padding:10px 12px; cursor:pointer; }
+    .auth-privacidad input { margin-top:2px; flex-shrink:0; }
+    .auth-privacidad a { color:#047857; font-weight:600; }
 
     /* ===== Foto IA ===== */
     .foto-card { border:2px dashed #a7f3d0; background:linear-gradient(135deg,#f0fdf4,#ecfeff); }
@@ -1945,6 +1948,10 @@
       <input type="email" id="authEmail" class="input" placeholder="tu@email.com" autocomplete="email">
       <label class="auth-label" for="authPass">Contraseña</label>
       <input type="password" id="authPass" class="input" placeholder="Mínimo 8 caracteres" autocomplete="current-password">
+      <label id="authPrivacidadWrap" class="auth-privacidad hidden">
+        <input type="checkbox" id="authPrivacidad">
+        <span>He leído y acepto el <a href="./aviso-privacidad.html" target="_blank" rel="noopener">Aviso de Privacidad</a> y el tratamiento de mis datos según se describe en él.</span>
+      </label>
       <p id="authError" class="auth-error hidden"></p>
       <button id="authSubmit" class="btn btn-primary auth-submit">Entrar</button>
       <p id="authAlt" class="auth-alt"></p>
