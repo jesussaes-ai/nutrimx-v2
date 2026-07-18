@@ -960,6 +960,9 @@ class NutriApp {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('hidden', c.id !== `tab-${tab}`));
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (tab === 'nutricion' && window.planUI) window.planUI.render();
+    if (tab === 'suplementos' && window.videosSaludUI) window.videosSaludUI.render();
+    if (tab === 'dashboard' && window.saludDiariaUI) window.saludDiariaUI.render();
+    if (tab === 'tracking' && window.basculaUI) window.basculaUI.render();
   }
 
   // ==================== OBJETIVOS ====================
