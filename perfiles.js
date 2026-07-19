@@ -219,7 +219,7 @@ const PERFILES = {
       ],
       videos: [
         { id: '67wl05H1K3U', titulo: 'Entrenamiento en silla — adultos mayores' },
-        { id: 'FPe2R4QwgzE', titulo: 'Fortalecimiento muscular sentado' },
+        { id: 'G8qpkLMbijA', titulo: 'Ejercicios en silla — sesión completa' },
         { id: 'o-4R_BNYyiM', titulo: 'Rutina 70+ años sentados en silla' },
         { id: 'UQx5qhptp4s', titulo: 'Rutina y estiramientos sentados' },
         { id: '4jJLToTbt9A', titulo: 'Gimnasia de pie para mayores' },
@@ -312,13 +312,14 @@ class PerfilesUI {
     cont.querySelectorAll('.perfil-rutina-head').forEach(h => {
       h.addEventListener('click', () => h.parentElement.classList.toggle('abierta'));
     });
+    if (window.activarIlustraciones) window.activarIlustraciones(cont);
   }
 
   renderEjercicio(p) {
     const rutinas = p.ejercicio.rutinas.map(r => `
       <div class="perfil-rutina">
         <div class="perfil-rutina-head">${r.nombre}<span class="perfil-flecha">▾</span></div>
-        <ul class="perfil-rutina-lista">${r.detalle.map(d => `<li>${d}</li>`).join('')}</ul>
+        <ul class="perfil-rutina-lista">${r.detalle.map((d, i) => window.liEjercicioConIlustracion ? window.liEjercicioConIlustracion(d, 'perfil' + Math.random().toString(36).slice(2, 5), i) : `<li>${d}</li>`).join('')}</ul>
       </div>`).join('');
     const videos = p.ejercicio.videos.map(v => `
       <div class="video-card" data-video="${v.id}" data-titulo="${v.titulo}">
@@ -359,8 +360,11 @@ class PerfilesUI {
     const player = document.getElementById('perfilVideoPlayer');
     if (!player) return;
     player.classList.remove('hidden');
-    player.innerHTML = `<div class="video-player-head"><strong>${titulo}</strong><button class="auth-btn" onclick="this.closest('.video-player').classList.add('hidden');this.closest('.video-player').querySelector('iframe')?.remove()">✕ Cerrar</button></div>
-      <iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${titulo}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    player.innerHTML = `<div class="video-player-head"><strong>${titulo}</strong>
+      <span><a class="video-yt" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+      <button class="auth-btn" onclick="this.closest('.video-player').classList.add('hidden');this.closest('.video-player').querySelector('iframe')?.remove()">✕ Cerrar</button></span></div>
+      <iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${titulo}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      <p class="video-nota">Si el video no carga aquí, ábrelo con "Ver en YouTube".</p>`;
     player.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }

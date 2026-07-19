@@ -108,8 +108,11 @@ class VideosSaludUI {
     const player = document.getElementById('vsPlayer');
     if (!player) return;
     player.classList.remove('hidden');
-    player.innerHTML = `<div class="video-player-head"><strong>${titulo}</strong><button class="auth-btn" onclick="this.closest('.video-player').classList.add('hidden');this.closest('.video-player').querySelector('iframe')?.remove()">✕ Cerrar</button></div>
-      <iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${titulo}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    player.innerHTML = `<div class="video-player-head"><strong>${titulo}</strong>
+      <span><a class="video-yt" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+      <button class="auth-btn" onclick="this.closest('.video-player').classList.add('hidden');this.closest('.video-player').querySelector('iframe')?.remove()">✕ Cerrar</button></span></div>
+      <iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${titulo}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      <p class="video-nota">Si el video no carga aquí, ábrelo con "Ver en YouTube".</p>`;
     player.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }

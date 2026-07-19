@@ -202,7 +202,7 @@ class PlanUI {
         <div class="plan-modos">${botones}</div>
         ${avisoActiva}
         <div class="plan-rutina-nombre">${sel.nombre}</div>
-        <ul class="plan-rutina">${sel.detalle.map(x => `<li>${x}</li>`).join('')}</ul>
+        <ul class="plan-rutina">${sel.detalle.map((x, i) => window.liEjercicioConIlustracion ? window.liEjercicioConIlustracion(x, 'plan', i) : `<li>${x}</li>`).join('')}</ul>
         <p class="text-xs text-gray-500 mb-2">${ej.nota}</p>
         <div class="video-grid">${ej.videos.map(v => `
           <div class="video-card" data-video="${v.id}" data-titulo="${v.titulo}">
@@ -235,6 +235,7 @@ class PlanUI {
     cont.querySelectorAll('.video-card').forEach(card => {
       card.addEventListener('click', () => this.reproducir(card.dataset.video, card.dataset.titulo));
     });
+    if (window.activarIlustraciones) window.activarIlustraciones(cont);
     // Selector de modalidad de ejercicio: guarda la elección del usuario
     cont.querySelectorAll('.plan-modo').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -281,8 +282,11 @@ class PlanUI {
     const player = document.getElementById('planVideoPlayer');
     if (!player) return;
     player.classList.remove('hidden');
-    player.innerHTML = `<div class="video-player-head"><strong>${titulo}</strong><button class="auth-btn" onclick="this.closest('.video-player').classList.add('hidden');this.closest('.video-player').querySelector('iframe')?.remove()">✕ Cerrar</button></div>
-      <iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${titulo}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    player.innerHTML = `<div class="video-player-head"><strong>${titulo}</strong>
+      <span><a class="video-yt" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">▶ Ver en YouTube</a>
+      <button class="auth-btn" onclick="this.closest('.video-player').classList.add('hidden');this.closest('.video-player').querySelector('iframe')?.remove()">✕ Cerrar</button></span></div>
+      <iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${titulo}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      <p class="video-nota">Si el video no carga aquí, es porque su autor bloqueó la reproducción externa — ábrelo con "Ver en YouTube".</p>`;
     player.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
