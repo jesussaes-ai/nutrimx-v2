@@ -410,13 +410,68 @@ class NutriApp {
     document.getElementById('fibraTotal').textContent = `${totals.fibra}g`;
     document.getElementById('fibraBar').style.width = `${fibraPct}%`;
 
-    // Agua
-    document.getElementById('aguaTotal').textContent = agua;
+    // Agua — 250 ml por vaso, meta personalizada según peso (35 ml/kg)
+    this.renderAgua(agua);
+  }
+
+  /** Vaso estándar de la app. */
+  get VASO_ML() { return 250; }
+
+  /** Meta diaria de vasos según el peso del usuario (35 ml/kg); 8 vasos por defecto. */
+  metaVasos() {
+    try {
+      const s = JSON.parse(localStorage.getItem('nutrimx_salud') || 'null');
+      if (s && s.peso) {
+        const ml = s.peso * 35;
+        return Math.max(6, Math.min(20, Math.round(ml / this.VASO_ML)));
+      }
+    } catch (e) {}
+    return 8;
+  }
+
+  renderAgua(agua) {
+    const total = document.getElementById('aguaTotal');
+    if (!total) return;
+    const meta = this.metaVasos();
+    const ml = agua * this.VASO_ML;
+    const metaMl = meta * this.VASO_ML;
+
+    total.textContent = agua;
+    const metaEl = document.getElementById('aguaMeta');
+    if (metaEl) metaEl.textContent = `Vasos de agua de 250 ml (meta ${meta})`;
+    const mlEl = document.getElementById('aguaMl');
+    if (mlEl) mlEl.textContent = `${ml.toLocaleString()} ml de ${metaMl.toLocaleString()} ml (${(metaMl / 1000).toFixed(1)} L)`;
+    const fill = document.getElementById('aguaFill');
+    if (fill) fill.style.width = Math.min(100, Math.round((agua / meta) * 100)) + '%';
+    const input = document.getElementById('aguaInput');
+    if (input && document.activeElement !== input) input.value = agua;
+
+    // Círculos: hasta la meta, o más si ya la superó. Se puede tocar para fijar el número.
     const vasos = document.getElementById('aguaVasos');
-    vasos.innerHTML = '';
-    for (let i = 1; i <= 8; i++) {
-      vasos.innerHTML += `<span class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm ${i <= agua ? 'bg-blue-500 border-blue-500 text-white' : 'border-gray-300'}">${i}</span>`;
+    if (vasos) {
+      const hasta = Math.max(meta, agua);
+      let html = '';
+      for (let i = 1; i <= hasta; i++) {
+        const lleno = i <= agua;
+        const extra = i > meta;
+        html += `<button class="agua-vaso ${lleno ? 'lleno' : ''} ${extra ? 'extra' : ''}" data-vaso="${i}" title="Marcar ${i} vaso(s) = ${i * this.VASO_ML} ml">${i}</button>`;
+      }
+      vasos.innerHTML = html;
+      vasos.querySelectorAll('[data-vaso]').forEach(b => b.addEventListener('click', () => {
+        const n = parseInt(b.dataset.vaso);
+        // Tocar el mismo vaso que ya está marcado lo desmarca (permite bajar o poner 0)
+        this.fijarAgua(n === agua ? n - 1 : n);
+      }));
     }
+  }
+
+  /** Fija el número exacto de vasos (permite 0 y más de la meta). */
+  fijarAgua(n) {
+    const reg = this.getRegistro(this.fechaActual);
+    reg.agua = Math.max(0, Math.min(40, Math.round(n) || 0));
+    this.guardarTodo();
+    this.renderResumen();
+    this.toast(`💧 ${reg.agua} vaso(s) — ${reg.agua * this.VASO_ML} ml`, 'success');
   }
 
   // ==================== TAB EJERCICIO ====================
@@ -880,6 +935,17 @@ class NutriApp {
     // Agua
     const btnAgua = document.getElementById('btnAgua');
     if (btnAgua) btnAgua.addEventListener('click', () => this.agregarAgua());
+
+    // Control libre de vasos de agua (+ / − / escribir el número)
+    const aMas = document.getElementById('aguaMas');
+    const aMenos = document.getElementById('aguaMenos');
+    const aInput = document.getElementById('aguaInput');
+    if (aMas) aMas.addEventListener('click', () => this.fijarAgua((this.getRegistro(this.fechaActual).agua || 0) + 1));
+    if (aMenos) aMenos.addEventListener('click', () => this.fijarAgua((this.getRegistro(this.fechaActual).agua || 0) - 1));
+    if (aInput) {
+      aInput.addEventListener('change', () => this.fijarAgua(parseInt(aInput.value)));
+      aInput.addEventListener('keydown', e => { if (e.key === 'Enter') { aInput.blur(); this.fijarAgua(parseInt(aInput.value)); } });
+    }
 
     // Peso
     const btnPeso = document.getElementById('btnGuardarPeso');

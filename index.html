@@ -411,6 +411,22 @@
     .vs-intro { font-size:.82rem; color:#6b7280; margin-bottom:8px; }
     .vs-top { position:absolute; top:6px; left:6px; background:#dc2626; color:#fff; font-size:.62rem; font-weight:700; padding:2px 7px; border-radius:9999px; z-index:2; }
 
+    /* ===== Agua ===== */
+    .agua-ml { font-size:.78rem; color:#0369a1; font-weight:600; margin-top:2px; }
+    .agua-vaso { width:30px; height:30px; border-radius:50%; border:2px solid #d1d5db; background:#fff;
+      font-size:.72rem; font-weight:600; color:#6b7280; cursor:pointer; transition:.15s; }
+    .agua-vaso:hover { transform:scale(1.12); border-color:#0284c7; }
+    .agua-vaso.lleno { background:#0284c7; border-color:#0284c7; color:#fff; }
+    .agua-vaso.extra { border-style:dashed; }
+    .agua-vaso.extra.lleno { background:#0ea5e9; border-color:#0ea5e9; border-style:solid; }
+    .agua-control { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:10px; }
+    .agua-btn { width:34px; height:34px; border-radius:50%; border:2px solid #bae6fd; background:#f0f9ff;
+      color:#0369a1; font-size:1.2rem; font-weight:700; cursor:pointer; line-height:1; }
+    .agua-btn:hover { background:#e0f2fe; }
+    .agua-input { width:74px; text-align:center; font-weight:700; padding:6px; }
+    .agua-barra { height:7px; background:#e5e7eb; border-radius:9999px; overflow:hidden; margin-top:10px; }
+    .agua-fill { height:100%; background:linear-gradient(90deg,#0ea5e9,#0284c7); border-radius:9999px; transition:width .3s; }
+
     /* ===== Rutinas de salud diarias ===== */
     .sd-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
     .sd-card { border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#f9fafb; }
@@ -629,8 +645,15 @@
         </div>
         <div class="card p-4 text-center">
           <div class="text-3xl font-bold text-blue-700" id="aguaTotal">0</div>
-          <div class="text-sm text-gray-500">Vasos de agua (meta 8)</div>
-          <div class="flex justify-center gap-1 mt-2" id="aguaVasos"></div>
+          <div class="text-sm text-gray-500" id="aguaMeta">Vasos de agua (250 ml c/u)</div>
+          <div class="agua-ml" id="aguaMl">0 ml</div>
+          <div class="flex justify-center gap-1 mt-2 flex-wrap" id="aguaVasos"></div>
+          <div class="agua-control">
+            <button class="agua-btn" id="aguaMenos" title="Quitar un vaso">−</button>
+            <input type="number" id="aguaInput" class="input agua-input" min="0" max="40" step="1" value="0" aria-label="Número de vasos">
+            <button class="agua-btn" id="aguaMas" title="Agregar un vaso">+</button>
+          </div>
+          <div class="agua-barra"><div class="agua-fill" id="aguaFill" style="width:0%"></div></div>
         </div>
       </div>
 
