@@ -1,7 +1,8 @@
 ====================================================================
-NUTRIMX v3.6 — PROMPT MAESTRO / ESPECIFICACIÓN COMPLETA
+NUTRIMX v4.2 — PROMPT MAESTRO / ESPECIFICACIÓN COMPLETA
 App de nutrición, ejercicio y salud basada en evidencia (México)
-URL producción: https://nutrimx.netlify.app
+URL producción: https://jesussaes-ai.github.io/nutrimx-v2/
+(Netlify descontinuado: se quedó sin créditos y dejó de publicar)
 ====================================================================
 
 --------------------------------------------------------------------
@@ -24,8 +25,10 @@ médico: es educativa y de autocuidado, y siempre remite al médico.
 - Backend: Supabase (Postgres + Auth + Storage + Edge Functions).
 - IA: proveedor CONFIGURABLE (Anthropic u OpenRouter) vía variables de
   entorno; el usuario elige el modelo desde Ajustes.
-- Hosting: Netlify con auto-deploy desde GitHub (cada push publica).
-- Repo: GitHub (jesussaes-ai/nutrimx-v2), rama main.
+- Hosting: GitHub Pages (auto-deploy desde main; gratis, sin límites).
+- Repo: GitHub (jesussaes-ai/nutrimx-v2), rama main, carpeta raíz.
+- CRÍTICO: todas las rutas deben ser RELATIVAS (./archivo.js) para que
+  funcione en subdirectorio (/nutrimx-v2/). Nunca rutas absolutas.
 
 --------------------------------------------------------------------
 2) ACCESO Y REGISTRO (puerta de entrada)
@@ -41,6 +44,12 @@ médico: es educativa y de autocuidado, y siempre remite al médico.
 - Si un usuario con sesión no completó su evaluación, se le fuerza a
   terminarla antes de entrar (no se puede cerrar sin completar; cerrar
   = cerrar sesión).
+- CRÍTICO: antes de volver a pedir la evaluación, la app DEBE intentar
+  recuperarla de la nube (profiles.datos). Si no, quien entre desde
+  otro dispositivo tendría que llenarla de nuevo.
+- SESIÓN: se cierra sola tras 30 min de inactividad, con aviso previo
+  de 1 min ("¿Sigues ahí?") y cuenta regresiva. Cualquier actividad
+  reinicia el contador. Estándar en apps de salud (sesion.js).
 
 --------------------------------------------------------------------
 3) EVALUACIÓN INICIAL (tipo PAR-Q+) — al registrarse
@@ -79,13 +88,23 @@ usuario la ve; no se usa fuera del perfil.
 5) DASHBOARD
 --------------------------------------------------------------------
 - Anillo de calorías del día vs objetivo; barras de proteína, carbos,
-  grasa; fibra; vasos de agua (meta 8).
+  grasa; fibra.
+- AGUA: vaso estándar de 250 ml. Meta NO fija: se calcula con el peso
+  (35 ml/kg, mín 6 máx 20 vasos). Muestra ml y litros. Los círculos son
+  BOTONES (tocas el 7 y quedas en 7; tocar el mismo desmarca). Además
+  campo numérico libre y botones − / +. Acepta 0 y más de la meta.
 - Distribución por comida (desayuno/comida/cena/colación).
-- RUTINAS DE SALUD DIARIAS (panel): sueño (horas, meta 7–9),
-  pasos (meta 8,000), relajación/meditación (min), ánimo/energía
-  (5 emojis), y checklist de hábitos saludables (dormir, moverse,
-  agua, verduras, sol/vit D, evitar ultraprocesados, estirar, cortar
-  pantallas). Se guarda por día y sincroniza a la nube.
+- RUTINAS DE SALUD DIARIAS (salud-diaria.js):
+  * SUEÑO: campo LIBRE 0 a 24 h con medias horas; botones rápidos
+    0/4/5/6/7/8/9/10/12 h y pasos de ±0.5 h. 7–9 h es REFERENCIA, no
+    meta: hay turnos nocturnos, guardias de 24 h y condiciones médicas.
+    Nota: "si dormiste por partes, suma todo lo del día".
+  * PASOS: campo libre (referencia 8,000).
+  * RELAJACIÓN: botones de 10 en 10 hasta 60 min, campo libre a 180.
+  * ÁNIMO: 5 emojis. HÁBITOS: checklist de 8.
+  Se guarda por día y sincroniza (dias.salud).
+  PRINCIPIO: no imponer números; dar referencia y dejar registrar la
+  realidad de cada persona.
 
 --------------------------------------------------------------------
 6) NUTRICIÓN
@@ -104,6 +123,12 @@ usuario la ve; no se usa fuera del perfil.
 - "TU PLAN DEL DÍA": menú sugerido con alimentos reales ajustado a las
   calorías y proteína del usuario, distribuido 25/35/25/15. Botones
   "Cargar este menú a mi registro" y "Otra variante".
+- MENÚ EDITABLE (clave): el menú es SUGERENCIA, no imposición. Cada
+  alimento tiene 🔄 (cambiar) y ✕ (quitar); cada comida "➕ Agregar".
+  Al cambiar se ofrecen alternativas de la MISMA categoría + buscador
+  libre; los gramos se recalculan para conservar las kcal de ese lugar.
+  Caso real: "dejo la pechuga, cambio la avena por licuado de fresa y
+  el kiwi por plátano, según lo que tenga en el refri".
 - Registro del día por comida, editable.
 - FOTO DE COMIDA CON IA: el usuario sube foto y la IA identifica los
   alimentos y estima gramos, calorías y macros; se agregan al registro
@@ -116,6 +141,13 @@ Perfiles: Hombre, Mujer, Niños, Adultos mayores. Cada uno con:
   - Ejercicio: rutinas por nivel + nota basada en guías. Videoteca
     amplia de YouTube (embeds oficiales): ~18 hombre, ~18 mujer,
     ~14 niños, ~13 mayores. Los videos ROTAN por día en el plan.
+    Todo reproductor debe incluir "▶ Ver en YouTube": algunos autores
+    bloquean la reproducción incrustada.
+  - ILUSTRACIONES ANIMADAS (ilustraciones.js): cada ejercicio tiene
+    botón "👁️ ver cómo" con figura SVG ANIMADA (dos posiciones que se
+    alternan como GIF + flecha de dirección) y 4 claves de técnica.
+    Dibujos propios, sin derechos de terceros. 16 ilustraciones que se
+    enlazan por palabras clave. Respetan prefers-reduced-motion.
   - Alimentación: puntos clave + menú ejemplo mexicano.
   - Suplementos con grado de evidencia A/B/C. (Niños: SIN suplementos
     ni dietas restrictivas; solo hábitos y juego activo.)
@@ -225,13 +257,38 @@ Secrets: LLM_PROVIDER (anthropic|openrouter), LLM_MODEL,
 - Recomendar, no imponer: dar la recomendación y dejar elegir.
 
 --------------------------------------------------------------------
-16) FLUJO DE DESARROLLO
+16) ARCHIVOS DEL PROYECTO
+--------------------------------------------------------------------
+index.html · app.js · ciencia.js (151 alimentos) · nube.js · salud.js
+acceso.js · perfiles.js · plan.js · ilustraciones.js · avatar.js
+modelo.js · asistente.js · ayuda.js · videos-salud.js · salud-diaria.js
+bascula.js · sesion.js · aviso-privacidad.html · sw.js · manifest.json
+
+--------------------------------------------------------------------
+17) FLUJO DE DESARROLLO
 --------------------------------------------------------------------
 - Cada cambio: git pull → editar → git add -A && git commit -m "..."
-  && git push. Netlify publica solo en ~1 min. Bump del cache del
-  Service Worker en cada release (CACHE_NAME).
+  && git push. GitHub Pages publica solo en ~1 min.
+- Bump del CACHE_NAME del Service Worker en CADA release.
+- Si se agregan alimentos, el caché local se invalida solo comparando
+  la cantidad (parsed.length !== ciencia.alimentos.length).
+- CUIDADO con git pull cuando hay ediciones locales sin commitear:
+  puede revertirlas. Commitear antes de hacer pull.
 - Monetización con planes: PENDIENTE (después de las pruebas).
 
+--------------------------------------------------------------------
+18) LECCIONES APRENDIDAS (errores reales, no repetir)
+--------------------------------------------------------------------
+- Rutas absolutas rompen el sitio en subdirectorio → usar "./".
+- Decidir el acceso antes de bajar los datos de la nube hace que se
+  pida la evaluación otra vez → consultar la nube primero.
+- Videos con reproducción incrustada bloqueada → ofrecer enlace directo.
+- Metas fijas (8 vasos, 8 h de sueño) no sirven para todos → dar
+  referencia y campo libre.
+- Un menú predefinido que no se puede editar frustra al usuario.
+- Los cachés viejos del Service Worker se acumulan si no se limpian.
+- Un hosting con créditos limitados puede dejar de publicar sin aviso.
+
 ====================================================================
-Fin del prompt maestro — NutriMX v3.6
+Fin del prompt maestro — NutriMX v4.2
 ====================================================================

@@ -106,17 +106,69 @@ La app existía como archivos locales (index.html, app.js, ciencia.js, sw.js, ma
 
 ---
 
+## 🎨 v3.7 — Ilustraciones de ejercicios
+- Las rutinas decían *qué* hacer, pero no mostraban *cómo*.
+- **16 ilustraciones SVG originales** (dibujos propios, sin derechos de terceros) con figura + 4 claves de técnica, con botón **👁️ "ver cómo"** en cada ejercicio.
+- Se detectó un video con reproducción incrustada bloqueada por su autor → se reemplazó y se agregó **"▶ Ver en YouTube"** en todos los reproductores.
+
+---
+
+## 🚨 Crisis — Netlify se quedó sin créditos
+- Los cambios dejaron de publicarse: el código estaba bien, pero **Netlify deshabilitó los deploys de producción por falta de créditos**.
+- **Migración a GitHub Pages** en minutos (el código ya estaba en GitHub y todas las rutas eran relativas).
+- Nueva dirección: **https://jesussaes-ai.github.io/nutrimx-v2/** — gratis y sin límite de despliegues.
+- De paso se limpiaron 15 cachés viejos acumulados en el navegador.
+
+---
+
+## 🍽️ v3.8 — Menú editable y animaciones
+- **El menú dejó de ser una imposición:** cada alimento tiene 🔄 (cambiar), ✕ (quitar) y cada comida "➕ Agregar". Se sugieren alternativas de la misma categoría, hay buscador libre y los gramos se recalculan solos.
+  *Caso real: "dejo la pechuga, cambio la avena por licuado de fresa y el kiwi por plátano".*
+- **Las 16 ilustraciones ahora se animan** (dos posiciones alternándose, como GIF), respetando "reducir movimiento" por accesibilidad.
+
+---
+
+## 🔄 v3.9 — Bug crítico: la evaluación se pedía dos veces
+- Al entrar desde otro dispositivo, la app pedía llenar la evaluación otra vez aunque ya existiera en la nube.
+- Causa: decidía el acceso **antes** de terminar de descargar los datos.
+- Arreglo: ahora **consulta la nube primero** y solo la pide si de verdad no existe.
+
+---
+
+## 💧 v4.0 — Agua realista
+- Los círculos de vasos eran decorativos: **ahora son botones**.
+- **Vaso estándar de 250 ml**, con ml y litros a la vista.
+- **Cualquier cantidad**: campo libre y botones −/+, acepta 0 y más de la meta.
+- **Meta personalizada según el peso** (35 ml/kg): 11 vasos para 80 kg, 8 para 60 kg, 14 para 100 kg.
+
+---
+
+## 🔒 v4.1 — Sesión con cierre por inactividad
+- Se explicó por qué la app entraba directo (token de sesión: comportamiento normal, no un fallo).
+- Como maneja datos de salud, se agregó **cierre automático tras 30 min de inactividad**, con aviso "¿Sigues ahí?" y cuenta regresiva.
+
+---
+
+## 😴 v4.2 — Sueño y meditación sin límites artificiales
+- **Sueño libre de 0 a 24 h** (con medias horas): hay vigilantes en guardia de 24 h, turnos nocturnos y condiciones médicas que cambian el requerimiento. Se cambió "Meta" por **"Referencia"**.
+- **Meditación de 10 en 10 hasta 60 minutos** (campo libre hasta 180).
+- Principio adoptado: *la app da referencias, no impone números*.
+
+---
+
 ## 📄 Documentación final
 - `NUTRIMX_PROMPT_MAESTRO.txt` — especificación completa para reconstruir la app.
 - `README.md` — descripción del proyecto.
 - `LINEA_DEL_TIEMPO.md` — este documento.
+- `NutriMX - Nota Obsidian.md` — nota consolidada para vault de Obsidian.
 
 ---
 
 ## ⏳ Pendientes (siguiente etapa)
-- Pruebas end-to-end del análisis de comida con foto (la IA de OpenRouter ya responde).
+- Pruebas end-to-end del **asistente 🤖** y del **análisis de comida con foto**.
+- Dar de baja el hosting viejo de Netlify (se dejó unos días por precaución).
 - **Monetización con planes** — pospuesta hasta terminar pruebas.
 
 ---
 
-*Cada versión se desplegó a producción vía GitHub → Netlify, con el agente HERMES sincronizado en cada cambio.*
+*De la v2.0 a la v4.2: cada versión se desplegó a producción (Netlify primero, GitHub Pages después), con el agente HERMES sincronizado en cada cambio.*
