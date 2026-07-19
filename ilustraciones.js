@@ -6,10 +6,21 @@
 
 // Piezas reutilizables del muñeco
 const _fig = (partes) => `<svg viewBox="0 0 140 130" xmlns="http://www.w3.org/2000/svg" class="ilu-svg">
-  <style>.b{stroke:#065f46;stroke-width:5;stroke-linecap:round;fill:none}
-  .b2{stroke:#a7f3d0;stroke-width:5;stroke-linecap:round;fill:none}
-  .h{fill:#065f46}.h2{fill:#a7f3d0}.obj{stroke:#6b7280;stroke-width:3;fill:#e5e7eb}
-  .fl{stroke:#d1d5db;stroke-width:3}.ar{stroke:#f59e0b;stroke-width:3;fill:none;marker-end:url(#a)}</style>
+  <style>
+  /* Dos posiciones que se alternan = animación del movimiento (como un GIF) */
+  .b{stroke:#065f46;stroke-width:5;stroke-linecap:round;fill:none;animation:pos1 2.4s infinite}
+  .h{fill:#065f46;animation:pos1 2.4s infinite}
+  .b2{stroke:#065f46;stroke-width:5;stroke-linecap:round;fill:none;animation:pos2 2.4s infinite}
+  .h2{fill:#065f46;animation:pos2 2.4s infinite}
+  @keyframes pos1{0%,42%{opacity:1}52%,92%{opacity:.12}100%{opacity:1}}
+  @keyframes pos2{0%,42%{opacity:.12}52%,92%{opacity:1}100%{opacity:.12}}
+  .obj{stroke:#6b7280;stroke-width:3;fill:#e5e7eb}
+  .obj1{animation:pos1 2.4s infinite}.obj2{animation:pos2 2.4s infinite}
+  .fl{stroke:#d1d5db;stroke-width:3}
+  .ar{stroke:#f59e0b;stroke-width:3;fill:none;marker-end:url(#a);animation:flecha 2.4s infinite}
+  @keyframes flecha{0%,30%{opacity:.25}50%{opacity:1}80%,100%{opacity:.25}}
+  @media (prefers-reduced-motion: reduce){.b,.h,.b2,.h2,.ar{animation:none}.b2,.h2{opacity:.3}}
+  </style>
   <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
     <path d="M0,0 L0,6 L7,3 z" fill="#f59e0b"/></marker></defs>
   <line class="fl" x1="5" y1="122" x2="135" y2="122"/>
@@ -62,10 +73,13 @@ const ILUSTRACIONES = {
     svg: _fig(`${SILLA}
       <circle class="h" cx="86" cy="40" r="9"/>
       <path class="b" d="M86 49 v24 M86 73 h-16 M70 73 v22 M70 95 h-10"/>
-      <!-- brazos arriba --><path class="b" d="M86 55 l-16 -22 M86 55 l14 -22"/>
-      <rect class="obj" x="64" y="26" width="10" height="9" rx="2"/>
-      <rect class="obj" x="96" y="26" width="10" height="9" rx="2"/>
-      <path class="ar" d="M110 52 v-16"/>`),
+      <!-- brazos arriba (posición 1) --><path class="b" d="M86 55 l-16 -22 M86 55 l14 -22"/>
+      <rect class="obj obj1" x="64" y="26" width="10" height="9" rx="2"/>
+      <rect class="obj obj1" x="96" y="26" width="10" height="9" rx="2"/>
+      <!-- brazos abajo (posición 2) --><path class="b2" d="M86 55 l-15 -3 M86 55 l14 -3"/>
+      <rect class="obj obj2" x="63" y="48" width="10" height="9" rx="2"/>
+      <rect class="obj obj2" x="97" y="48" width="10" height="9" rx="2"/>
+      <path class="ar" d="M114 54 v-18"/>`),
     cues: ['Empieza con las botellas a la altura de los hombros',
       'Sube hasta estirar los brazos, sin trabar los codos',
       'Baja controlado, contando 2 segundos',
@@ -76,9 +90,10 @@ const ILUSTRACIONES = {
     svg: _fig(`${SILLA}
       <circle class="h" cx="86" cy="40" r="9"/>
       <path class="b" d="M86 49 v24 M86 73 h-16 M70 73 v22 M70 95 h-10"/>
-      <!-- brazos jalando --><path class="b" d="M86 56 l-10 -4 M86 56 l-10 6"/>
-      <!-- liga --><path d="M76 52 q-26 4 -40 0 M76 62 q-26 -4 -40 0" stroke="#f59e0b" stroke-width="3" fill="none"/>
-      <path class="ar" d="M64 76 q12 -2 20 -8"/>`),
+      <!-- brazos jalando (posición 1) --><path class="b" d="M86 56 l-10 -4 M86 56 l-10 6"/>
+      <!-- brazos estirados (posición 2) --><path class="b2" d="M86 56 l-24 -3 M86 56 l-24 5"/>
+      <!-- liga --><path d="M62 52 q-16 3 -26 0 M62 62 q-16 -3 -26 0" stroke="#f59e0b" stroke-width="3" fill="none"/>
+      <path class="ar" d="M58 78 q14 -2 24 -8"/>`),
     cues: ['Liga sujeta al frente, a la altura del pecho',
       'Jala los codos hacia atrás, pegados al cuerpo',
       'Junta los omóplatos, como si apretaras un lápiz en la espalda',
@@ -100,9 +115,12 @@ const ILUSTRACIONES = {
   'estiramiento-cuello': {
     nombre: 'Estiramiento de cuello y espalda',
     svg: _fig(`${SILLA}
-      <circle class="h" cx="80" cy="44" r="9" transform="rotate(-18 80 44)"/>
-      <path class="b" d="M84 52 q-4 12 2 22 M86 74 h-16 M70 74 v21 M70 95 h-10 M84 58 l-12 8 M84 58 l12 6"/>
-      <path class="ar" d="M70 34 q-10 4 -12 12"/>`),
+      <path class="b" d="M86 74 h-16 M70 74 v21 M70 95 h-10"/>
+      <!-- cabeza inclinada (posición 1) --><circle class="h" cx="78" cy="46" r="9"/>
+      <path class="b" d="M80 55 q3 10 6 19 M84 60 l-12 8 M84 60 l12 6"/>
+      <!-- cabeza derecha (posición 2) --><circle class="h2" cx="86" cy="42" r="9"/>
+      <path class="b2" d="M86 51 v23 M86 58 l-12 8 M86 58 l12 6"/>
+      <path class="ar" d="M66 40 q-8 6 -8 14"/>`),
     cues: ['Inclina la cabeza hacia un lado, oreja al hombro',
       'Sostén 20-30 segundos, respirando tranquilo',
       'No rebotes ni fuerces — debe sentirse un jalón suave',
@@ -111,8 +129,9 @@ const ILUSTRACIONES = {
   'puente-gluteo': {
     nombre: 'Puente de glúteo',
     svg: _fig(`<circle class="h" cx="30" cy="96" r="9"/>
-      <path class="b" d="M39 96 q22 -26 42 -4 M81 92 v24 M81 116 h12 M39 96 l-4 -14"/>
-      <path class="ar" d="M60 68 v-14"/>`),
+      <!-- cadera arriba (posición 1) --><path class="b" d="M39 96 q22 -26 42 -4 M81 92 v24 M81 116 h12"/>
+      <!-- cadera abajo (posición 2) --><path class="b2" d="M39 100 q22 -6 42 -8 M81 92 v24 M81 116 h12"/>
+      <path class="ar" d="M60 66 v-14"/>`),
     cues: ['Acostado boca arriba, rodillas dobladas, pies al piso',
       'Aprieta los glúteos y sube la cadera',
       'Sostén 2 segundos arriba, forma una línea recta',
@@ -132,8 +151,10 @@ const ILUSTRACIONES = {
   'elevacion-pierna-lateral': {
     nombre: 'Elevación de pierna de lado',
     svg: _fig(`<circle class="h" cx="26" cy="98" r="9"/>
-      <path class="b" d="M35 98 h44 M79 98 l22 -18 M79 98 l24 14"/>
-      <path class="ar" d="M104 90 q6 -10 2 -18"/>`),
+      <path class="b" d="M35 98 h44 M79 98 l24 14"/>
+      <!-- pierna arriba (posición 1) --><path class="b" d="M79 98 l22 -18"/>
+      <!-- pierna abajo (posición 2) --><path class="b2" d="M79 98 l24 6"/>
+      <path class="ar" d="M108 96 q6 -14 0 -22"/>`),
     cues: ['Acostado de lado, cuerpo alineado como una tabla',
       'Sube la pierna de arriba sin girar la cadera',
       'Sube hasta donde puedas sin dolor, baja despacio',
@@ -164,9 +185,11 @@ const ILUSTRACIONES = {
   },
   'sentadilla': {
     nombre: 'Sentadilla',
-    svg: _fig(`<circle class="h" cx="54" cy="26" r="10"/>
-      <path class="b" d="M54 36 v30 M54 66 l-12 26 M42 92 v26 M54 66 l14 26 M68 92 v26 M54 44 h22"/>
-      <path class="ar" d="M92 60 v26"/>`),
+    svg: _fig(`<!-- de pie (posición 1) --><circle class="h" cx="54" cy="26" r="10"/>
+      <path class="b" d="M54 36 v30 M54 66 l-10 26 M44 92 v26 M54 66 l12 26 M66 92 v26 M54 44 h22"/>
+      <!-- abajo en sentadilla (posición 2) --><circle class="h2" cx="54" cy="50" r="10"/>
+      <path class="b2" d="M54 60 v22 M54 82 l-14 8 M40 90 v28 M54 82 l16 6 M70 88 v30 M54 66 h22"/>
+      <path class="ar" d="M94 44 v34"/>`),
     cues: ['Pies al ancho de hombros, punta ligeramente hacia afuera',
       'Baja como si te sentaras en una silla invisible',
       'Rodillas en línea con los pies, pecho arriba',
@@ -174,9 +197,11 @@ const ILUSTRACIONES = {
   },
   'lagartija': {
     nombre: 'Lagartija / push-up',
-    svg: _fig(`<circle class="h" cx="34" cy="72" r="9"/>
+    svg: _fig(`<!-- arriba (posición 1) --><circle class="h" cx="34" cy="72" r="9"/>
       <path class="b" d="M43 74 h50 M93 74 l14 20 M43 74 l-4 22 M39 96 v14"/>
-      <path class="ar" d="M62 58 v-12 M62 88 v12"/>`),
+      <!-- abajo (posición 2) --><circle class="h2" cx="34" cy="90" r="9"/>
+      <path class="b2" d="M43 92 h50 M93 92 l14 6 M43 92 l-4 6 M39 98 v12"/>
+      <path class="ar" d="M64 58 v-12 M64 104 v10"/>`),
     cues: ['Manos un poco más abiertas que los hombros',
       'Cuerpo recto como tabla: no subas la cadera',
       'Baja hasta que el pecho casi toque, codos a 45°',
@@ -194,9 +219,11 @@ const ILUSTRACIONES = {
   },
   'peso-muerto-rumano': {
     nombre: 'Peso muerto rumano',
-    svg: _fig(`<circle class="h" cx="50" cy="34" r="10"/>
-      <path class="b" d="M50 44 q16 12 22 26 M72 70 v48 M50 52 l6 26 M40 78 h34"/>
-      <path class="ar" d="M96 56 q6 16 0 30"/>`),
+    svg: _fig(`<!-- inclinado (posición 1) --><circle class="h" cx="46" cy="46" r="10"/>
+      <path class="b" d="M50 54 q18 8 22 22 M72 76 v42 M52 62 l4 22 M40 84 h32"/>
+      <!-- de pie (posición 2) --><circle class="h2" cx="72" cy="26" r="10"/>
+      <path class="b2" d="M72 36 v40 M72 76 v42 M72 46 v30 M58 76 h28"/>
+      <path class="ar" d="M100 44 q8 18 0 34"/>`),
     cues: ['Rodillas ligeramente dobladas, espalda RECTA siempre',
       'Empuja la cadera hacia atrás, no dobles la espalda',
       'Baja hasta sentir el jalón atrás del muslo',
