@@ -1,5 +1,5 @@
 // Service Worker para NutriMX v2.0 - Offline-first PWA
-const CACHE_NAME = 'nutrimx-v4.1';
+const CACHE_NAME = 'nutrimx-v4.2';
 const STATIC_ASSETS = [
   './',
   './index.html',

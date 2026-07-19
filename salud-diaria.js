@@ -81,8 +81,15 @@ class SaludDiariaUI {
         <div class="sd-card">
           <div class="sd-top"><span>😴 Sueño</span><b>${sueno} h</b></div>
           <div class="sd-bar"><div class="sd-fill" style="width:${barra(sueno, 8)}%;background:#6366f1"></div></div>
-          <div class="sd-sub">Meta: 7-9 h</div>
-          <div class="sd-btns">${[5, 6, 7, 8, 9, 10].map(h => `<button class="sd-mini ${sueno === h ? 'on' : ''}" data-sueno="${h}">${h}h</button>`).join('')}</div>
+          <div class="sd-sub">Referencia: 7-9 h — pero cada persona es distinta (turnos, guardias, condición médica)</div>
+          <div class="sd-btns">${[0, 4, 5, 6, 7, 8, 9, 10, 12].map(h => `<button class="sd-mini ${sueno === h ? 'on' : ''}" data-sueno="${h}">${h}h</button>`).join('')}</div>
+          <div class="sd-input-row" style="margin-top:8px">
+            <button class="agua-btn sd-paso" data-sueno-paso="-0.5" title="Media hora menos">−</button>
+            <input type="number" id="sdSueno" class="input" placeholder="Horas" min="0" max="24" step="0.5" value="${sueno || ''}">
+            <button class="agua-btn sd-paso" data-sueno-paso="0.5" title="Media hora más">+</button>
+            <button class="btn btn-secondary sd-guardar" id="sdSuenoBtn">✓</button>
+          </div>
+          <div class="sd-sub" style="margin-top:6px">Escribe cualquier cantidad (0 a 24 h, admite medias horas). Si trabajas de noche o dormiste por partes, suma todo lo que dormiste en el día.</div>
         </div>
 
         <div class="sd-card">
@@ -94,9 +101,15 @@ class SaludDiariaUI {
 
         <div class="sd-card">
           <div class="sd-top"><span>🧘 Relajación</span><b>${relax} min</b></div>
-          <div class="sd-bar"><div class="sd-fill" style="width:${barra(relax, 15)}%;background:#7c3aed"></div></div>
-          <div class="sd-sub">Respiración/meditación · Meta: 10-15 min</div>
-          <div class="sd-btns">${[5, 10, 15, 20].map(m => `<button class="sd-mini ${relax === m ? 'on' : ''}" data-relax="${m}">${m}m</button>`).join('')}</div>
+          <div class="sd-bar"><div class="sd-fill" style="width:${barra(relax, 60)}%;background:#7c3aed"></div></div>
+          <div class="sd-sub">Respiración / meditación · Referencia: 10-15 min (hasta 1 hora si meditas más)</div>
+          <div class="sd-btns">${[10, 20, 30, 40, 50, 60].map(m => `<button class="sd-mini ${relax === m ? 'on' : ''}" data-relax="${m}">${m}m</button>`).join('')}</div>
+          <div class="sd-input-row" style="margin-top:8px">
+            <button class="agua-btn sd-paso" data-relax-paso="-5" title="5 min menos">−</button>
+            <input type="number" id="sdRelax" class="input" placeholder="Minutos" min="0" max="180" step="5" value="${relax || ''}">
+            <button class="agua-btn sd-paso" data-relax-paso="5" title="5 min más">+</button>
+            <button class="btn btn-secondary sd-guardar" id="sdRelaxBtn">✓</button>
+          </div>
         </div>
 
         <div class="sd-card">
@@ -122,6 +135,34 @@ class SaludDiariaUI {
       const v = parseInt(document.getElementById('sdPasos').value) || 0;
       this.set('pasos', v);
     });
+
+    // Sueño: campo libre (0-24 h, medias horas) + botones de medio paso
+    const guardarSueno = () => {
+      let v = parseFloat(document.getElementById('sdSueno').value) || 0;
+      this.set('sueno', Math.max(0, Math.min(24, Math.round(v * 2) / 2)));
+    };
+    const sb = document.getElementById('sdSuenoBtn');
+    if (sb) sb.addEventListener('click', guardarSueno);
+    const si = document.getElementById('sdSueno');
+    if (si) si.addEventListener('keydown', e => { if (e.key === 'Enter') { si.blur(); guardarSueno(); } });
+    cont.querySelectorAll('[data-sueno-paso]').forEach(b => b.addEventListener('click', () => {
+      const paso = parseFloat(b.dataset.suenoPaso);
+      this.set('sueno', Math.max(0, Math.min(24, (this.hoy().sueno || 0) + paso)));
+    }));
+
+    // Relajación: campo libre en minutos + pasos de 5
+    const guardarRelax = () => {
+      let v = parseInt(document.getElementById('sdRelax').value) || 0;
+      this.set('relax', Math.max(0, Math.min(180, v)));
+    };
+    const rb = document.getElementById('sdRelaxBtn');
+    if (rb) rb.addEventListener('click', guardarRelax);
+    const ri = document.getElementById('sdRelax');
+    if (ri) ri.addEventListener('keydown', e => { if (e.key === 'Enter') { ri.blur(); guardarRelax(); } });
+    cont.querySelectorAll('[data-relax-paso]').forEach(b => b.addEventListener('click', () => {
+      const paso = parseInt(b.dataset.relaxPaso);
+      this.set('relax', Math.max(0, Math.min(180, (this.hoy().relax || 0) + paso)));
+    }));
   }
 }
 
