@@ -23,8 +23,9 @@ class AccesoUI {
 
     // Estado inicial: mostrar la puerta hasta confirmar acceso.
     this.mostrarGate();
-    // nube.init() decidirá; damos un margen para que cargue la sesión.
-    setTimeout(() => this.verificarAcceso(), 800);
+    // nube.init() decide primero (ya espera a descargar datos). Este temporizador es
+    // solo una red de seguridad por si la nube no está disponible.
+    setTimeout(() => this.verificarAcceso(), 2500);
   }
 
   /** ¿El usuario completó su registro (evaluación con análisis)? */
@@ -44,8 +45,25 @@ class AccesoUI {
     document.body.classList.remove('bloqueado');
   }
 
+  /** Intenta recuperar la evaluación desde la nube antes de darla por inexistente. */
+  async restaurarDesdeNube() {
+    if (!(window.nube && window.nube.activa && window.salud)) return false;
+    try {
+      const { data } = await window.nube.sb
+        .from('profiles').select('datos').eq('id', window.nube.user.id).maybeSingle();
+      if (data && data.datos && data.datos.analisis) {
+        window.salud.datos = data.datos;
+        window.salud.guardarLocal();
+        window.salud.renderResumen();
+        if (window.salud.aplicarObjetivos) window.salud.aplicarObjetivos();
+        return true;
+      }
+    } catch (e) { console.warn('No se pudo restaurar la evaluación:', e); }
+    return false;
+  }
+
   /** Decide qué mostrar según sesión + registro. Llamar tras login, tras evaluación y al inicio. */
-  verificarAcceso() {
+  async verificarAcceso() {
     const autenticado = !!(window.nube && window.nube.activa);
 
     if (!autenticado) {
@@ -55,8 +73,12 @@ class AccesoUI {
     }
 
     if (!this.registroCompleto()) {
-      // Con sesión pero sin evaluación → forzar registro completo (no se puede saltar).
-      this.mostrarGate(); // el fondo sigue bloqueado detrás del wizard
+      // Antes de pedir la evaluación de nuevo, buscarla en la nube (otro dispositivo/navegador).
+      const restaurada = await this.restaurarDesdeNube();
+      if (restaurada) { this.ocultarGate(); return; }
+
+      // Realmente no existe → forzar registro completo (no se puede saltar).
+      this.mostrarGate();
       if (window.salud) window.salud.abrirObligatorio();
       return;
     }
